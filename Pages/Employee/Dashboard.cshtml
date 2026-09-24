@@ -1,0 +1,158 @@
+@page
+@model GiftOfTheGivers.Pages.Employee.DashboardModel
+@{
+    ViewData["Title"] = "Employee Dashboard";
+}
+
+@* ======================================================================
+   Employee Dashboard
+   Only reachable by users in the "Employee" Identity role — enforced by
+   [Authorize(Roles = "Employee")] on the PageModel, not just hidden in the
+   UI. A Donor account (or anonymous visitor) hitting this URL directly gets
+   redirected to /Identity/Account/Login by the Identity middleware.
+   ====================================================================== *@
+
+<div class="w-full bg-[#eef2e3] min-h-screen">
+    <div class="max-w-[1200px] mx-auto px-4 md:px-10 py-10">
+
+        <div class="flex items-center justify-between mb-8">
+            <div>
+                <h1 class="font-serif text-[32px] md:text-[40px] text-[#00271b]">Employee Dashboard</h1>
+                <p class="text-[14px] text-[#404944]">Signed in as <strong>@User.Identity!.Name</strong></p>
+            </div>
+            <form asp-area="Identity" asp-page="/Account/Logout" method="post">
+                <button type="submit" class="text-[13px] font-semibold px-4 py-2 border border-[#1b1c1b]/20 rounded-[4px] hover:bg-white">Log out</button>
+            </form>
+        </div>
+
+        @* Success/error banners from TempData, set by OnPostAsync above *@
+        @if (TempData["Error"] is string err)
+        {
+            <div class="mb-6 p-4 rounded-[8px] bg-red-50 border border-red-200 text-red-700 text-sm">@err</div>
+        }
+
+        @* ---------------- KPI stat cards ---------------- *@
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
+            <div class="bg-white rounded-[12px] p-5 border border-[#1b1c1b]/10 shadow-sm">
+                <div class="text-[11px] uppercase tracking-wider text-[#707974] font-semibold mb-1">Total Donations</div>
+                <div class="font-serif text-[28px] text-[#00271b]">@Model.TotalDonationCount</div>
+            </div>
+            <div class="bg-[#043f2e] text-white rounded-[12px] p-5 border border-white/10 shadow-sm">
+                <div class="text-[11px] uppercase tracking-wider text-[#9cd2ba] font-semibold mb-1">ZAR Raised</div>
+                <div class="font-serif text-[24px] text-[#c8f169]">R @Model.TotalZar.ToString("N0")</div>
+            </div>
+            <div class="bg-white rounded-[12px] p-5 border border-[#1b1c1b]/10 shadow-sm">
+                <div class="text-[11px] uppercase tracking-wider text-[#707974] font-semibold mb-1">USD / EUR Raised</div>
+                <div class="font-serif text-[20px] text-[#00271b]">$@Model.TotalUsd.ToString("N0") · €@Model.TotalEur.ToString("N0")</div>
+            </div>
+            <div class="bg-white rounded-[12px] p-5 border border-[#1b1c1b]/10 shadow-sm">
+                <div class="text-[11px] uppercase tracking-wider text-[#707974] font-semibold mb-1">Volunteers / Updates</div>
+                <div class="font-serif text-[24px] text-[#00271b]">@Model.TotalVolunteerCount / @Model.TotalUpdateCount</div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+
+            @* ---------------- Left column: post update + recent donations ---------------- *@
+            <div class="lg:col-span-5 space-y-8">
+
+                <div class="bg-white rounded-[16px] p-6 md:p-8 border border-[#1b1c1b]/10 shadow-sm">
+                    <h3 class="font-serif text-[22px] text-[#00271b] mb-4">Post a Project Update</h3>
+
+                    @* Posts to this same page's OnPostAsync handler *@
+                    <form method="post" class="space-y-4">
+                        <div asp-validation-summary="ModelOnly" class="text-red-600 text-sm"></div>
+
+                        <div>
+                            <label class="block text-[12px] uppercase tracking-[0.06em] font-semibold text-[#404944] mb-2">Title</label>
+                            <input asp-for="NewUpdate.Title" class="w-full px-4 py-3 rounded-[4px] border border-[#c0c9c2] focus:ring-1 focus:ring-[#c8f169] focus:border-[#c8f169] outline-none" />
+                        </div>
+                        <div>
+                            <label class="block text-[12px] uppercase tracking-[0.06em] font-semibold text-[#404944] mb-2">Description</label>
+                            <textarea asp-for="NewUpdate.Description" rows="4" class="w-full px-4 py-3 rounded-[4px] border border-[#c0c9c2] focus:ring-1 focus:ring-[#c8f169] focus:border-[#c8f169] outline-none"></textarea>
+                        </div>
+                        <button type="submit" class="w-full bg-[#c8f169] text-[#151f00] py-3 rounded-[4px] text-[14px] font-bold hover:bg-[#add450]">
+                            Post Update
+                        </button>
+                    </form>
+                </div>
+
+                <div class="bg-white rounded-[16px] p-6 md:p-8 border border-[#1b1c1b]/10 shadow-sm">
+                    <h3 class="font-serif text-[22px] text-[#00271b] mb-4">Recent Donations</h3>
+                    <div class="divide-y divide-[#1b1c1b]/10">
+                        @foreach (var d in Model.RecentDonations)
+                        {
+                            <div class="py-3 flex justify-between items-center text-sm">
+                                <span class="text-[#1b1c1b]">@(d.IsAnonymous ? "Anonymous" : d.DonorName)</span>
+                                <span class="font-semibold text-[#356854]">@d.Currency @d.Amount.ToString("N2")</span>
+                            </div>
+                        }
+                        @if (!Model.RecentDonations.Any())
+                        {
+                            <p class="py-3 text-sm text-[#707974]">No donations recorded yet.</p>
+                        }
+                    </div>
+                </div>
+            </div>
+
+            @* ---------------- Right column: posted updates + volunteer roster ---------------- *@
+            <div class="lg:col-span-7 space-y-8">
+
+                <div class="bg-white rounded-[16px] p-6 md:p-8 border border-[#1b1c1b]/10 shadow-sm">
+                    <h3 class="font-serif text-[22px] text-[#00271b] mb-4">Posted Updates</h3>
+                    @foreach (var u in Model.Updates)
+                    {
+                        <div class="border-b border-[#1b1c1b]/10 py-3 last:border-0">
+                            <div class="flex justify-between items-baseline">
+                                <strong class="text-[#1b1c1b] text-[15px]">@u.Title</strong>
+                                <span class="text-[11px] text-[#707974]">@u.PostedOn.ToString("dd MMM yyyy")</span>
+                            </div>
+                            <p class="text-[12px] text-[#707974] mb-1">by @u.PostedByName</p>
+                            <p class="text-[14px] text-[#404944]">@u.Description</p>
+                        </div>
+                    }
+                    @if (!Model.Updates.Any())
+                    {
+                        <p class="text-sm text-[#707974]">No updates posted yet.</p>
+                    }
+                </div>
+
+                <div class="bg-white rounded-[16px] p-6 md:p-8 border border-[#1b1c1b]/10 shadow-sm">
+                    <h3 class="font-serif text-[22px] text-[#00271b] mb-4">Volunteer Sign-Ups</h3>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-sm">
+                            <thead>
+                                <tr class="text-left text-[11px] uppercase tracking-wider text-[#707974] border-b border-[#1b1c1b]/10">
+                                    <th class="py-2 pr-4">Name</th>
+                                    <th class="py-2 pr-4">Skills</th>
+                                    <th class="py-2 pr-4">Availability</th>
+                                    <th class="py-2 pr-4">Contact</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @{
+                                    // zebra-striping: pale-sage on every other row, matching the design system
+                                    var rowIndex = 0;
+                                }
+                                @foreach (var v in Model.Volunteers)
+                                {
+                                    rowIndex++;
+                                    <tr class="@(rowIndex % 2 == 0 ? "bg-[#eef2e3]" : "")">
+                                        <td class="py-2 pr-4 font-medium text-[#1b1c1b]">@v.FullName</td>
+                                        <td class="py-2 pr-4 text-[#404944]">@v.Skills</td>
+                                        <td class="py-2 pr-4 text-[#404944]">@v.Availability</td>
+                                        <td class="py-2 pr-4 text-[#404944]">@v.Email</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                        @if (!Model.Volunteers.Any())
+                        {
+                            <p class="py-3 text-sm text-[#707974]">No volunteers registered yet.</p>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

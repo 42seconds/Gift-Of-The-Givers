@@ -1,0 +1,50 @@
+@model (int Size, bool LightText)
+@{
+    // NOTE: This is an original, AI-generated stylized monogram placeholder —
+    // it is NOT the real Gift of the Givers logo/trademark. Swap this out for
+    // the organization's actual public logo asset before treating this as final.
+    int size = Model.Size;
+    bool lightText = Model.LightText;
+}
+<div class="flex items-center gap-3 select-none">
+    <svg width="@size" height="@size" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" class="shrink-0">
+        <defs>
+            <radialGradient id="emeraldBadge" cx="45%" cy="35%" r="65%">
+                <stop offset="0%" stop-color="#0d5c3f" />
+                <stop offset="45%" stop-color="#043f2e" />
+                <stop offset="90%" stop-color="#02281d" />
+                <stop offset="100%" stop-color="#011912" />
+            </radialGradient>
+            <linearGradient id="goldMetallic" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#fff3b0" />
+                <stop offset="25%" stop-color="#e5c068" />
+                <stop offset="50%" stop-color="#c59837" />
+                <stop offset="75%" stop-color="#e9c878" />
+                <stop offset="100%" stop-color="#9a7020" />
+            </linearGradient>
+            <linearGradient id="goldRim" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#d4af37" stop-opacity="0.8" />
+                <stop offset="50%" stop-color="#043f2e" stop-opacity="0.2" />
+                <stop offset="100%" stop-color="#8d6b1d" stop-opacity="0.9" />
+            </linearGradient>
+        </defs>
+        <circle cx="50" cy="50" r="48" fill="url(#emeraldBadge)" />
+        <circle cx="50" cy="50" r="47.5" stroke="url(#goldRim)" stroke-width="1.5" />
+        <path d="M 33 68 L 33 34 C 33 24 41 18 53 18 C 65 18 73 24 73 34 L 73 68 C 73 70 70 72 67 72 L 40 72 C 37 72 35 70 35 68 Z"
+              fill="none" stroke="url(#goldMetallic)" stroke-width="5.5" stroke-linejoin="round" stroke-linecap="round" />
+        <path d="M 52 30 C 45 30 42 36 42 42 C 42 50 49 53 58 53 C 65 53 68 47 68 42 C 68 35 62 30 52 30 Z"
+              fill="none" stroke="url(#goldMetallic)" stroke-width="4.8" stroke-linecap="round" />
+        <path d="M 56 46 L 56 61 L 44 61" fill="none" stroke="url(#goldMetallic)" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" />
+        <path d="M 39 77 L 68 77" stroke="url(#goldMetallic)" stroke-width="4" stroke-linecap="round" />
+        <rect x="70.5" y="74" width="5" height="5" rx="0.8" fill="url(#goldMetallic)" />
+    </svg>
+
+    <div class="flex flex-col text-left">
+        <span class="font-serif text-[19px] md:text-[22px] font-bold leading-tight tracking-tight @(lightText ? "text-white" : "text-[#1b1c1b]")">
+            Gift of the Givers
+        </span>
+        <span class="font-sans text-[10px] md:text-[11px] font-semibold uppercase tracking-[0.14em] @(lightText ? "text-[#c8f169]" : "text-[#526d00]")">
+            Disaster Relief
+        </span>
+    </div>
+</div>

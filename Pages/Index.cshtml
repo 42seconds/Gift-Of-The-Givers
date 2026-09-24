@@ -1,0 +1,265 @@
+@page
+@model GiftOfTheGivers.Pages.IndexModel
+@{
+    ViewData["Title"] = "Home";
+}
+
+<div class="w-full">
+
+    <!-- 1. Hero -->
+    <section class="bg-[#043f2e] text-white py-16 md:py-24 px-4 md:px-10 min-h-[820px] flex items-center relative overflow-hidden">
+        <div class="absolute inset-0 opacity-10 pointer-events-none" style="background: radial-gradient(circle at top right, #c8f169, transparent 60%);"></div>
+
+        <div class="max-w-[1200px] mx-auto w-full grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center relative z-10">
+            <div class="lg:col-span-6 space-y-8">
+                <div class="bg-[#c8f169] text-[#151f00] rounded-[16px] p-8 md:p-12 hover:-translate-y-1 transition-transform duration-300">
+                    <h1 class="font-serif text-[38px] sm:text-[46px] md:text-[56px] leading-[1.08] mb-6 font-normal tracking-[-0.031em] text-[#002116]">
+                        Delivering Relief Faster, Where It Matters Most.
+                    </h1>
+                    <p class="text-[16px] md:text-[18px] text-[#151f00]/85 mb-8 max-w-lg leading-relaxed">
+                        We bridge the critical gap between immediate need and sustained recovery, restoring dignity and stability to communities affected by disaster.
+                    </p>
+                    <div class="flex flex-wrap gap-4">
+                        <a asp-page="/Donate" class="text-[14px] font-semibold text-[#1b1c1b] bg-white px-8 py-3.5 rounded-[4px] hover:bg-[#f6f3f1] active:scale-95 transition-all duration-150 inline-flex items-center gap-2">
+                            Donate Now →
+                        </a>
+                        <a asp-page="/Volunteer" class="text-[14px] font-semibold text-[#002116] border border-[#002116]/30 px-8 py-3.5 rounded-[4px] hover:bg-[#002116]/10 transition-colors duration-200">
+                            Become a Volunteer
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="lg:col-span-6 relative h-[420px] sm:h-[500px] lg:h-[580px] rounded-[16px] overflow-hidden group">
+                <img class="w-full h-full object-cover rounded-[16px] transition-transform duration-700 group-hover:scale-105"
+                     src="https://images.unsplash.com/photo-1593113598332-cd288d649433?q=80&w=1200&auto=format&fit=crop"
+                     alt="Disaster relief volunteers packing humanitarian supplies" />
+
+                <div class="absolute bottom-6 left-6 right-6 sm:right-auto sm:w-80 bg-[#043f2e] border border-white/15 rounded-[16px] p-6 shadow-2xl bg-opacity-95 text-white">
+                    <div class="flex justify-between items-start mb-3">
+                        <div>
+                            <span class="text-[11px] uppercase tracking-[0.06em] text-[#9cd2ba] font-medium block">Impact This Month</span>
+                            <div class="font-serif text-[42px] leading-tight text-[#c8f169] mt-0.5">3,200+</div>
+                        </div>
+                        <div class="bg-[#c8f169]/20 p-2.5 rounded-full text-[#c8f169]">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+                        </div>
+                    </div>
+                    <p class="text-[14px] text-white/85 mb-4 leading-normal">Households reached with immediate essential relief supplies.</p>
+                    <div class="h-8 w-full flex items-end gap-1.5 opacity-90">
+                        <div class="w-full bg-[#78c51c] h-[25%] rounded-t-[2px]"></div>
+                        <div class="w-full bg-[#78c51c] h-[45%] rounded-t-[2px]"></div>
+                        <div class="w-full bg-[#78c51c] h-[35%] rounded-t-[2px]"></div>
+                        <div class="w-full bg-[#78c51c] h-[65%] rounded-t-[2px]"></div>
+                        <div class="w-full bg-[#78c51c] h-[85%] rounded-t-[2px]"></div>
+                        <div class="w-full bg-[#c8f169] h-[100%] rounded-t-[2px]"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 2. Operations vs Community -->
+    <section class="py-20 md:py-24 px-4 md:px-10 bg-[#eef2e3]">
+        <div class="max-w-[1200px] mx-auto">
+            <div class="text-center mb-16 max-w-3xl mx-auto">
+                <h2 class="font-serif text-[32px] sm:text-[40px] md:text-[48px] text-[#00271b] mb-4 leading-tight">
+                    Clear the path from need to relief, together
+                </h2>
+                <p class="text-[16px] md:text-[18px] text-[#404944] leading-relaxed">
+                    Our unified platform ensures response teams are deployed efficiently and communities receive updates transparently.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <!-- Operations -->
+                <div class="bg-[#eae8e6] rounded-[16px] p-8 md:p-12 flex flex-col justify-between min-h-[420px] border border-[#1b1c1b]/10">
+                    <div>
+                        <span class="inline-block bg-[#356854]/10 text-[#356854] text-[12px] font-medium tracking-wider px-3.5 py-1 rounded-full mb-6 uppercase">Operations</span>
+                        <h3 class="font-serif text-[28px] md:text-[36px] text-[#1b1c1b] mb-4 leading-snug">Built for response teams</h3>
+                        <p class="text-[16px] text-[#404944] leading-relaxed max-w-md">
+                            Streamline logistics, manage volunteer rosters, and track inventory in real time — bringing clarity to complex operations so resources go exactly where they're needed.
+                        </p>
+                    </div>
+                    <div class="mt-8 pt-6 border-t border-[#1b1c1b]/10">
+                        <ul class="space-y-4">
+                            <li class="flex items-center gap-3 text-[#1b1c1b] text-[14px] font-semibold">✓ Real-time resource allocation</li>
+                            <li class="flex items-center gap-3 text-[#1b1c1b] text-[14px] font-semibold">✓ Volunteer shift scheduling</li>
+                            <li class="flex items-center gap-3 text-[#1b1c1b] text-[14px] font-semibold">✓ Secure communication channels</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Community -->
+                <div class="bg-[#c8f169] rounded-[16px] p-8 md:p-12 flex flex-col justify-between min-h-[420px] relative overflow-hidden">
+                    <div class="relative z-10 mb-6">
+                        <span class="inline-block bg-black/10 text-[#151f00] text-[12px] font-medium tracking-wider px-3.5 py-1 rounded-full mb-6 uppercase">Community</span>
+                        <h3 class="font-serif text-[28px] md:text-[36px] text-[#151f00] mb-4 leading-snug">And the communities you serve</h3>
+                        <p class="text-[16px] text-[#151f00]/80 leading-relaxed max-w-md">
+                            Transparent updates on relief efforts, accessible tracking for aid packages, and clear channels for feedback.
+                        </p>
+                    </div>
+                    <div class="relative z-10 flex flex-col sm:flex-row gap-4 mt-auto">
+                        <a asp-page="/Volunteer" class="bg-white rounded-[8px] p-4 shadow-sm border border-[#242423]/15 flex-1 -rotate-1 hover:rotate-0 transition-transform">
+                            <div class="text-[11px] uppercase tracking-wider font-semibold text-[#404944] mb-3 border-b border-[#242423]/10 pb-2 flex justify-between items-center">
+                                <span>Active Volunteers</span><span class="text-[10px] text-[#356854] font-bold">342 LIVE</span>
+                            </div>
+                            <div class="space-y-2.5">
+                                <div class="flex items-center gap-2">
+                                    <div class="w-6 h-6 rounded-full bg-[#043f2e] text-[#c8f169] flex items-center justify-center text-[10px] font-bold">JD</div>
+                                    <div class="h-2.5 w-20 bg-[#e5e2e0] rounded"></div>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <div class="w-6 h-6 rounded-full bg-[#356854] text-white flex items-center justify-center text-[10px] font-bold">ZO</div>
+                                    <div class="h-2.5 w-24 bg-[#e5e2e0] rounded"></div>
+                                </div>
+                            </div>
+                        </a>
+                        <a asp-page="/Donate" class="bg-white rounded-[8px] p-4 shadow-sm border border-[#242423]/15 flex-1 rotate-1 hover:rotate-0 transition-transform sm:translate-y-2">
+                            <div class="text-[11px] uppercase tracking-wider font-semibold text-[#404944] mb-3 border-b border-[#242423]/10 pb-2 flex justify-between items-center">
+                                <span>Funding Goal</span><span class="text-[10px] text-[#4d6700] font-bold">65% Reached</span>
+                            </div>
+                            <div class="h-2 w-full bg-[#e5e2e0] rounded-full overflow-hidden">
+                                <div class="h-full bg-[#78c51c] w-[65%]"></div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 3. Partners & Testimonial -->
+    <section class="bg-[#043f2e] text-white py-20 md:py-24 px-4 md:px-10">
+        <div class="max-w-[1200px] mx-auto">
+            <div class="text-center mb-12">
+                <p class="text-[12px] uppercase tracking-[0.1em] text-[#c4c8ba] font-medium">Trusted by our partners globally</p>
+            </div>
+
+            <!-- Generic placeholder partner marks — replace with real confirmed GOTG partners -->
+            <div class="flex flex-wrap justify-center items-center gap-8 md:gap-16 opacity-80 mb-20">
+                <div class="font-serif text-[22px] text-white">Partner Org</div>
+                <div class="font-serif text-[22px] text-white">Global Aid</div>
+                <div class="font-serif text-[22px] text-white">Clean Water Int.</div>
+                <div class="font-serif text-[22px] text-white">MedRelief</div>
+            </div>
+
+            <!-- Illustrative testimonial placeholder — replace with a real, consented quote before publishing -->
+            <div class="bg-[#c8f169] text-[#151f00] rounded-[16px] p-8 md:p-14 max-w-4xl mx-auto relative">
+                <div class="relative z-10 text-center">
+                    <p class="font-serif text-[24px] sm:text-[30px] md:text-[34px] leading-relaxed mb-8 max-w-2xl mx-auto text-[#002116]">
+                        "The immediate response and structured support provided allowed our community to regain its footing faster than we ever thought possible."
+                    </p>
+                    <div class="inline-flex flex-col items-center">
+                        <div class="w-12 h-12 bg-[#151f00]/10 rounded-full mb-3 flex items-center justify-center">👤</div>
+                        <span class="text-[15px] font-semibold text-[#151f00]">[Illustrative quote — insert real testimonial]</span>
+                        <span class="text-[12px] text-[#151f00]/70 mt-0.5">Community Leader, KwaZulu-Natal</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 4. Get Involved / Bento -->
+    <section class="py-20 md:py-24 px-4 md:px-10 bg-[#eef2e3]">
+        <div class="max-w-[1200px] mx-auto">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+
+                <div class="lg:col-span-5">
+                    <div class="bg-white rounded-[16px] p-8 md:p-10 border border-[#242423]/10 h-full flex flex-col justify-between">
+                        <div>
+                            <div class="w-12 h-12 bg-[#eae8e6] rounded-full flex items-center justify-center mb-6 text-[#356854]">👥</div>
+                            <h3 class="font-serif text-[28px] md:text-[36px] text-[#00271b] mb-4 leading-snug">Join a volunteer orientation</h3>
+                            <p class="text-[15px] md:text-[16px] text-[#404944] leading-relaxed mb-8">
+                                Learn our methodology for disaster response. We value composure, precision, and deep empathy in the field.
+                            </p>
+                        </div>
+                        <button id="openScheduleModal" class="text-[14px] font-semibold text-[#00271b] border border-[#242423]/25 px-6 py-3 rounded-[4px] hover:bg-[#eef2e3] self-start inline-flex items-center gap-2">
+                            📅 View Schedule
+                        </button>
+                    </div>
+                </div>
+
+                <div class="lg:col-span-7 bg-white rounded-[16px] p-8 md:p-10 border border-[#242423]/10">
+                    <div class="mb-6 flex justify-between items-end">
+                        <div>
+                            <h3 class="font-serif text-[28px] md:text-[34px] text-[#00271b] mb-2 leading-snug">Beyond emergency response</h3>
+                            <p class="text-[15px] text-[#404944]">Our sustainable initiatives require ongoing support.</p>
+                        </div>
+                        <a asp-page="/OurWork" class="hidden sm:inline-flex items-center gap-1 text-[13px] font-semibold text-[#356854] hover:text-[#00271b]">Explore All →</a>
+                    </div>
+
+                    <div class="grid grid-cols-2 md:grid-cols-3 gap-4 auto-rows-[120px]">
+                        <a asp-page="/Donate" class="col-span-2 row-span-2 bg-[#c8f169] rounded-[8px] p-6 flex flex-col justify-between hover:bg-[#add450] transition-colors">
+                            <div class="bg-black/10 w-10 h-10 rounded-full flex items-center justify-center text-[#151f00]">🔥</div>
+                            <div>
+                                <h4 class="text-[16px] font-bold text-[#151f00] mb-1">Disaster Response ✨</h4>
+                                <p class="text-[12px] uppercase tracking-wider text-[#151f00]/70">Immediate action force</p>
+                            </div>
+                        </a>
+                        <a asp-page="/Donate" class="bg-[#eae8e6] rounded-[8px] p-4 flex flex-col justify-between hover:bg-[#e5e2e0] transition-colors border border-[#242423]/10">
+                            <span>🩺</span><h4 class="text-[14px] font-semibold text-[#1b1c1b]">Medical Relief</h4>
+                        </a>
+                        <a asp-page="/Volunteer" class="bg-[#eae8e6] rounded-[8px] p-4 flex flex-col justify-between hover:bg-[#e5e2e0] transition-colors border border-[#242423]/10">
+                            <span>🤝</span><h4 class="text-[14px] font-semibold text-[#1b1c1b]">Volunteer Programs</h4>
+                        </a>
+                        <a asp-page="/Donate" class="bg-[#eae8e6] rounded-[8px] p-4 flex flex-col justify-between hover:bg-[#e5e2e0] transition-colors border border-[#242423]/10">
+                            <span>🏘️</span><h4 class="text-[14px] font-semibold text-[#1b1c1b]">Community Dev</h4>
+                        </a>
+                        <a asp-page="/Donate" class="col-span-2 md:col-span-1 bg-[#eae8e6] rounded-[8px] p-4 flex flex-col justify-between hover:bg-[#e5e2e0] transition-colors border border-[#242423]/10">
+                            <span>👨‍👩‍👧</span><h4 class="text-[14px] font-semibold text-[#1b1c1b]">Sponsor a Family</h4>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Orientation Schedule Modal -->
+    <div id="scheduleModal" class="hidden fixed inset-0 z-50 items-center justify-center bg-black/60 p-4">
+        <div class="bg-white rounded-[16px] p-6 md:p-8 max-w-lg w-full border border-[#1b1c1b]/10 shadow-2xl relative">
+            <button id="closeScheduleModal" class="absolute top-5 right-5 text-[#404944] hover:text-[#1b1c1b] p-1 rounded-full hover:bg-[#eef2e3]">✕</button>
+            <div class="w-10 h-10 bg-[#c8f169] rounded-full flex items-center justify-center mb-4 text-[#151f00]">📅</div>
+            <h3 class="font-serif text-[24px] text-[#00271b] mb-1">Upcoming Volunteer Orientations</h3>
+            <p class="text-[14px] text-[#404944] mb-6">Complete mandatory orientation before active disaster deployment.</p>
+
+            <div class="space-y-3 mb-6">
+                @{
+                    var sessions = new[] {
+                        ("Saturday, Sept 5, 2026", "10:00 AM – 1:00 PM SAST", "Johannesburg Logistics Hub & Online", "8 spots left"),
+                        ("Wednesday, Sept 9, 2026", "6:00 PM – 8:30 PM SAST", "Cape Town Regional Center", "14 spots left"),
+                        ("Saturday, Sept 12, 2026", "9:30 AM – 12:30 PM SAST", "Durban Disaster Depot & Virtual", "5 spots left")
+                    };
+                }
+                @foreach (var s in sessions)
+                {
+                    <div class="p-4 bg-[#f6f3f1] rounded-[8px] border border-[#1b1c1b]/10 flex justify-between items-center">
+                        <div>
+                            <div class="text-[14px] font-semibold text-[#1b1c1b]">@s.Item1</div>
+                            <div class="text-[12px] text-[#404944]">@s.Item2</div>
+                            <div class="text-[12px] text-[#356854] font-medium mt-1">@s.Item3</div>
+                        </div>
+                        <a asp-page="/Volunteer" class="px-3 py-1.5 bg-[#c8f169] text-[#151f00] text-[12px] font-semibold rounded-[4px] hover:bg-[#add450]">RSVP</a>
+                    </div>
+                }
+            </div>
+            <div class="flex justify-end">
+                <button id="closeScheduleModal2" class="text-[14px] font-semibold px-4 py-2 text-[#404944] hover:text-[#1b1c1b]">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        (function () {
+            var modal = document.getElementById('scheduleModal');
+            document.getElementById('openScheduleModal')?.addEventListener('click', function () {
+                modal.classList.remove('hidden'); modal.classList.add('flex');
+            });
+            function close() { modal.classList.add('hidden'); modal.classList.remove('flex'); }
+            document.getElementById('closeScheduleModal')?.addEventListener('click', close);
+            document.getElementById('closeScheduleModal2')?.addEventListener('click', close);
+        })();
+    </script>
+}

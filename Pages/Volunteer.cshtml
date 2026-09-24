@@ -1,0 +1,188 @@
+@page
+@model GiftOfTheGivers.Pages.VolunteerModel
+@{
+    ViewData["Title"] = "Volunteer";
+}
+
+<div class="w-full bg-[#eef2e3]">
+
+    <!-- Intro -->
+    <section class="max-w-[1200px] mx-auto px-4 md:px-10 pt-10 md:pt-14 pb-16">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-12 items-center">
+            <div>
+                <h1 class="font-serif text-[38px] sm:text-[48px] md:text-[56px] leading-[1.1] text-[#00271b] mb-6 font-normal">
+                    Stand with us.<br />Serve humanity.
+                </h1>
+                <p class="text-[16px] md:text-[18px] text-[#404944] mb-8 max-w-xl leading-relaxed">
+                    Your time and skills can bring hope to those affected by disasters. Join our network of dedicated volunteers providing critical support where it's needed most.
+                </p>
+                <div class="flex items-center gap-3 text-[#356854] text-[14px] font-semibold">
+                    <span>🛡️</span>
+                    <span>Certified disaster safety training provided free for all registrants</span>
+                </div>
+            </div>
+            <div class="h-64 sm:h-80 md:h-96 w-full rounded-[16px] overflow-hidden shadow-lg border border-[#1b1c1b]/10">
+                <img class="w-full h-full object-cover" src="https://images.unsplash.com/photo-1593113646773-028c64a8f1b8?q=80&w=1000&auto=format&fit=crop" alt="Volunteers sorting relief goods" />
+            </div>
+        </div>
+    </section>
+
+    <!-- Form + Current Needs -->
+    <section class="bg-[#043f2e] text-white py-16 md:py-20">
+        <div class="max-w-[1200px] mx-auto px-4 md:px-10">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
+
+                <!-- Registration Form -->
+                <div class="lg:col-span-5" id="volunteer-reg-form">
+                    <div class="bg-white text-[#1b1c1b] rounded-[16px] p-6 sm:p-8 md:p-9 border border-black/10 shadow-xl relative z-10">
+
+                        @if (TempData["Success"] is string success)
+                        {
+                            <div class="space-y-4 py-2 text-center">
+                                <div class="w-14 h-14 bg-[#c8f169] rounded-full flex items-center justify-center mx-auto text-2xl">✓</div>
+                                <h3 class="font-serif text-[24px] text-[#00271b]">You're Registered!</h3>
+                                <p class="text-[14px] text-[#404944]">@success</p>
+                            </div>
+                        }
+                        else
+                        {
+                            <h3 class="font-serif text-[24px] text-[#00271b] mb-1">Volunteer Registration</h3>
+                            <p class="text-[14px] text-[#404944] mb-6">Tell us a bit about yourself and how you'd like to help.</p>
+
+                            <form method="post" class="space-y-5">
+                                <div asp-validation-summary="ModelOnly" class="text-red-600 text-sm"></div>
+
+                                <div>
+                                    <label class="block text-[12px] uppercase tracking-[0.06em] font-semibold text-[#404944] mb-2">Full Name</label>
+                                    <input asp-for="Volunteer.FullName" class="w-full px-4 py-3 rounded-[4px] border border-[#c0c9c2] focus:ring-1 focus:ring-[#c8f169] focus:border-[#c8f169] outline-none" />
+                                    <span asp-validation-for="Volunteer.FullName" class="text-red-600 text-xs"></span>
+                                </div>
+
+                                <div>
+                                    <label class="block text-[12px] uppercase tracking-[0.06em] font-semibold text-[#404944] mb-2">Email</label>
+                                    <input asp-for="Volunteer.Email" type="email" class="w-full px-4 py-3 rounded-[4px] border border-[#c0c9c2] focus:ring-1 focus:ring-[#c8f169] focus:border-[#c8f169] outline-none" />
+                                    <span asp-validation-for="Volunteer.Email" class="text-red-600 text-xs"></span>
+                                </div>
+
+                                <div>
+                                    <label class="block text-[12px] uppercase tracking-[0.06em] font-semibold text-[#404944] mb-2">Phone Number</label>
+                                    <input asp-for="Volunteer.PhoneNumber" placeholder="e.g. 071 234 5678" class="w-full px-4 py-3 rounded-[4px] border border-[#c0c9c2] focus:ring-1 focus:ring-[#c8f169] focus:border-[#c8f169] outline-none" />
+                                </div>
+
+                                <!-- Skills as removable chips, serialized into the hidden Skills field on submit -->
+                                <div>
+                                    <label class="block text-[12px] uppercase tracking-[0.06em] font-semibold text-[#404944] mb-2">Skills</label>
+                                    <div id="skillChips" class="flex flex-wrap gap-2 mb-2"></div>
+                                    <input id="skillInput" type="text" placeholder="Type a skill and press Enter"
+                                           class="w-full px-4 py-3 rounded-[4px] border border-[#c0c9c2] focus:ring-1 focus:ring-[#c8f169] focus:border-[#c8f169] outline-none" />
+                                    <input asp-for="Volunteer.Skills" id="skillsHidden" type="hidden" />
+                                    <span asp-validation-for="Volunteer.Skills" class="text-red-600 text-xs"></span>
+
+                                    <div class="flex flex-wrap gap-1.5 mt-2">
+                                        @foreach (var s in new[] { "Trauma Care", "Heavy Driving", "Translation", "Water Purification", "Search & Rescue", "Warehouse Inventory" })
+                                        {
+                                            <button type="button" class="suggested-skill text-[11px] px-2.5 py-1 rounded-full bg-[#eef2e3] text-[#356854] hover:bg-[#c8f169]/30" data-skill="@s">+ @s</button>
+                                        }
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <label class="block text-[12px] uppercase tracking-[0.06em] font-semibold text-[#404944] mb-2">Availability</label>
+                                    <select asp-for="Volunteer.Availability" class="w-full px-4 py-3 rounded-[4px] border border-[#c0c9c2] focus:ring-1 focus:ring-[#c8f169] focus:border-[#c8f169] outline-none">
+                                        <option value="">Select availability...</option>
+                                        <option value="Weekends only">Weekends only</option>
+                                        <option value="Evenings">Evenings</option>
+                                        <option value="Full-time during crisis">Full-time during crisis</option>
+                                        <option value="Flexible / On-call">Flexible / On-call</option>
+                                    </select>
+                                    <span asp-validation-for="Volunteer.Availability" class="text-red-600 text-xs"></span>
+                                </div>
+
+                                <button type="submit" class="w-full bg-[#c8f169] text-[#151f00] py-4 rounded-[4px] text-[15px] font-bold hover:bg-[#add450] active:scale-[0.99] transition-all">
+                                    Submit Application
+                                </button>
+                            </form>
+                        }
+                    </div>
+                </div>
+
+                <!-- Current Needs -->
+                <div class="lg:col-span-7">
+                    <h3 class="font-serif text-[28px] md:text-[34px] text-white mb-6">Current Volunteer Needs</h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                        <div class="bg-white/5 border border-white/10 rounded-[12px] p-5">
+                            <div class="text-2xl mb-2">🚚</div>
+                            <h4 class="text-[15px] font-semibold text-white mb-1">Logistics & Driving</h4>
+                            <p class="text-[13px] text-[#a3c9b7]">Heavy vehicle drivers needed for supply convoys.</p>
+                        </div>
+                        <div class="bg-white/5 border border-white/10 rounded-[12px] p-5">
+                            <div class="text-2xl mb-2">🩺</div>
+                            <h4 class="text-[15px] font-semibold text-white mb-1">First Aid</h4>
+                            <p class="text-[13px] text-[#a3c9b7]">Trained medical volunteers for field clinics.</p>
+                        </div>
+                        <div class="bg-white/5 border border-white/10 rounded-[12px] p-5">
+                            <div class="text-2xl mb-2">🌍</div>
+                            <h4 class="text-[15px] font-semibold text-white mb-1">Translation</h4>
+                            <p class="text-[13px] text-[#a3c9b7]">Language support across deployment regions.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+@section Scripts {
+    <script>
+        (function () {
+            var chips = [];
+            var chipContainer = document.getElementById('skillChips');
+            var hiddenInput = document.getElementById('skillsHidden');
+            var textInput = document.getElementById('skillInput');
+
+            function render() {
+                chipContainer.innerHTML = '';
+                chips.forEach(function (skill) {
+                    var chip = document.createElement('span');
+                    chip.className = 'inline-flex items-center gap-1.5 bg-[#eae8e6] text-[#1b1c1b] text-[12px] font-medium px-3 py-1.5 rounded-full';
+                    chip.textContent = skill;
+                    var remove = document.createElement('button');
+                    remove.type = 'button';
+                    remove.textContent = '✕';
+                    remove.className = 'text-[#707974] hover:text-[#1b1c1b]';
+                    remove.addEventListener('click', function () {
+                        chips = chips.filter(function (s) { return s !== skill; });
+                        render();
+                    });
+                    chip.appendChild(remove);
+                    chipContainer.appendChild(chip);
+                });
+                hiddenInput.value = chips.join(', ');
+            }
+
+            function addSkill(skill) {
+                var trimmed = skill.trim();
+                if (trimmed && chips.indexOf(trimmed) === -1) {
+                    chips.push(trimmed);
+                    render();
+                }
+            }
+
+            // seed with the same defaults the original design started with
+            addSkill('Medical');
+            addSkill('Logistics');
+
+            textInput.addEventListener('keydown', function (e) {
+                if (e.key === 'Enter' || e.key === ',') {
+                    e.preventDefault();
+                    addSkill(textInput.value);
+                    textInput.value = '';
+                }
+            });
+
+            document.querySelectorAll('.suggested-skill').forEach(function (btn) {
+                btn.addEventListener('click', function () { addSkill(btn.dataset.skill); });
+            });
+        })();
+    </script>
+}

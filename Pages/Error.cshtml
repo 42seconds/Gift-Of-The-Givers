@@ -1,0 +1,21 @@
+@page
+@model GiftOfTheGivers.Pages.ErrorModel
+@{
+    ViewData["Title"] = "Error";
+}
+
+<div class="w-full min-h-[60vh] flex items-center justify-center bg-[#eef2e3] px-4 py-16">
+    <div class="bg-white rounded-[16px] p-10 max-w-md w-full text-center border border-[#1b1c1b]/10 shadow-sm">
+        <h1 class="font-serif text-[28px] text-[#00271b] mb-3">Something went wrong.</h1>
+        <p class="text-[14px] text-[#404944] mb-6">
+            An unexpected error occurred. If this keeps happening, please contact the site administrator.
+        </p>
+        @if (Model.ShowRequestId)
+        {
+            <p class="text-[12px] text-[#a3a89f]">Request ID: <code>@Model.RequestId</code></p>
+        }
+        <a asp-page="/Index" class="inline-block mt-6 bg-[#c8f169] text-[#151f00] px-6 py-3 rounded-[4px] text-[14px] font-semibold hover:bg-[#add450]">
+            Return to Home
+        </a>
+    </div>
+</div>
