@@ -1,0 +1,87 @@
+{
+  "info": {
+    "name": "Gift of the Givers - Azure Functions",
+    "description": "Tests for the GiftOfTheGivers.Functions project. Set baseUrl to http://localhost:7071/api when running locally, or https://<function-app>.azurewebsites.net/api after deploying (and paste the default function key into functionKey).",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:7071/api" },
+    { "key": "functionKey", "value": "" }
+  ],
+  "item": [
+    {
+      "name": "1. Generate tax certificate (POST JSON)",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "x-functions-key", "value": "{{functionKey}}" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"donationId\": 12,\n  \"donorName\": \"Thandi Mokoena\",\n  \"donorEmail\": \"thandi@example.com\",\n  \"isAnonymous\": false,\n  \"amount\": 750.00,\n  \"currency\": \"ZAR\",\n  \"frequency\": \"OneTime\",\n  \"donationDate\": \"2026-09-20T10:30:00Z\"\n}"
+        },
+        "url": { "raw": "{{baseUrl}}/certificates", "host": ["{{baseUrl}}"], "path": ["certificates"] }
+      }
+    },
+    {
+      "name": "2. Generate tax certificate (GET, HTML view)",
+      "request": {
+        "method": "GET",
+        "header": [ { "key": "x-functions-key", "value": "{{functionKey}}" } ],
+        "url": {
+          "raw": "{{baseUrl}}/certificates?donationId=12&donorName=Thandi%20Mokoena&amount=750&currency=ZAR&format=html",
+          "host": ["{{baseUrl}}"],
+          "path": ["certificates"],
+          "query": [
+            { "key": "donationId", "value": "12" },
+            { "key": "donorName", "value": "Thandi%20Mokoena" },
+            { "key": "amount", "value": "750" },
+            { "key": "currency", "value": "ZAR" },
+            { "key": "format", "value": "html" }
+          ]
+        }
+      }
+    },
+    {
+      "name": "3. Generate tax certificate - invalid amount (expect 400)",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "x-functions-key", "value": "{{functionKey}}" }
+        ],
+        "body": { "mode": "raw", "raw": "{\n  \"donationId\": 13,\n  \"amount\": 0\n}" },
+        "url": { "raw": "{{baseUrl}}/certificates", "host": ["{{baseUrl}}"], "path": ["certificates"] }
+      }
+    },
+    {
+      "name": "4. Log project update to Azure Storage (POST)",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "x-functions-key", "value": "{{functionKey}}" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"projectUpdateId\": 3,\n  \"title\": \"KZN flood relief\",\n  \"description\": \"Water, blankets and food parcels delivered to 400 families.\",\n  \"postedByUserId\": \"demo-employee\",\n  \"postedByName\": \"Employee Demo\"\n}"
+        },
+        "url": { "raw": "{{baseUrl}}/project-updates", "host": ["{{baseUrl}}"], "path": ["project-updates"] }
+      }
+    },
+    {
+      "name": "5. Read project update log from Azure Storage (GET)",
+      "request": {
+        "method": "GET",
+        "header": [ { "key": "x-functions-key", "value": "{{functionKey}}" } ],
+        "url": {
+          "raw": "{{baseUrl}}/project-updates?take=10",
+          "host": ["{{baseUrl}}"],
+          "path": ["project-updates"],
+          "query": [ { "key": "take", "value": "10" } ]
+        }
+      }
+    }
+  ]
+}

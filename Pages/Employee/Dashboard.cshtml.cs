@@ -13,11 +13,13 @@ namespace gift_of_the_givers.Pages.Employee
     {
         private readonly ApplicationDbContext _db;
         private readonly AccountService _accountService;
+        private readonly AzureFunctionsClient _functions;
 
-        public DashboardModel(ApplicationDbContext db, AccountService accountService)
+        public DashboardModel(ApplicationDbContext db, AccountService accountService, AzureFunctionsClient functions)
         {
             _db = db;
             _accountService = accountService;
+            _functions = functions;
         }
 
         [BindProperty]
@@ -36,6 +38,9 @@ namespace gift_of_the_givers.Pages.Employee
         public IList<VolunteerSignup> RecentVolunteers { get; set; } = new List<VolunteerSignup>();
 
         public IList<ProjectUpdate> ProjectUpdates { get; set; } = new List<ProjectUpdate>();
+
+        // Latest entries from the Azure Table Storage log (null when the Function App is offline).
+        public IReadOnlyList<ProjectUpdateLogEntry>? StorageLog { get; set; }
 
         // Loads the current dashboard snapshot, including summary metrics and the latest records from each table.
         public async Task OnGetAsync()
@@ -61,7 +66,12 @@ namespace gift_of_the_givers.Pages.Employee
             try
             {
                 await _db.InsertProjectUpdateAsync(ProjectUpdate);
-                TempData["Success"] = "Project update posted successfully.";
+
+                // Hand the update to the LogProjectUpdate Azure Function, which records it in Azure Table Storage.
+                var logged = await _functions.LogProjectUpdateAsync(ProjectUpdate);
+                TempData["Success"] = logged
+                    ? "Project update posted successfully and logged to Azure Storage."
+                    : "Project update posted successfully (Azure Function offline, so it was not logged to Azure Storage).";
                 return RedirectToPage("/Employee/Dashboard");
             }
             catch (SqlException)
@@ -75,6 +85,8 @@ namespace gift_of_the_givers.Pages.Employee
         // Pulls the employee dashboard data in one place so the page model stays easy to follow.
         private async Task LoadDashboardDataAsync()
         {
+            StorageLog = await _functions.GetProjectUpdateLogAsync(5);
+
             DonationCount = RecentDonations.Count;
             DonationTotal = 0m;
             VolunteerCount = 0;

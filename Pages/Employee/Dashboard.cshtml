@@ -86,6 +86,47 @@
             </div>
         </div>
 
+        <div class="dashboard-card">
+            <h2 class="dashboard-card__title">Azure Storage update log</h2>
+            <p class="muted-text">Entries written to the ProjectUpdateLog table by the LogProjectUpdate Azure Function.</p>
+            @if (Model.StorageLog is null)
+            {
+                <p class="muted-text">The Azure Function App is not reachable right now.</p>
+            }
+            else if (Model.StorageLog.Count == 0)
+            {
+                <p class="muted-text">No updates logged to Azure Storage yet.</p>
+            }
+            else
+            {
+                <div class="table-card">
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Update #</th>
+                                    <th>Title</th>
+                                    <th>Posted by</th>
+                                    <th>Logged (UTC)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var entry in Model.StorageLog)
+                                {
+                                    <tr>
+                                        <td>@entry.ProjectUpdateId</td>
+                                        <td>@entry.Title</td>
+                                        <td>@entry.PostedByName</td>
+                                        <td>@entry.LoggedOnUtc.ToString("dd MMM yyyy HH:mm")</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            }
+        </div>
+
         <div class="dashboard-grid">
             <div class="dashboard-card">
                 <h2 class="dashboard-card__title">Recent donations</h2>

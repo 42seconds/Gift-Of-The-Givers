@@ -16,6 +16,18 @@ builder.Services.AddScoped<ApplicationDbContext>();
 builder.Services.AddScoped<IPasswordHasher<ApplicationUser>, PasswordHasher<ApplicationUser>>();
 builder.Services.AddScoped<AccountService>();
 
+// Typed client for the GiftOfTheGivers.Functions project (tax certificates + Azure Storage update log).
+var functionsOptions = builder.Configuration.GetSection("AzureFunctions").Get<AzureFunctionsOptions>() ?? new AzureFunctionsOptions();
+builder.Services.AddHttpClient<AzureFunctionsClient>(client =>
+{
+    client.BaseAddress = new Uri(functionsOptions.BaseUrl.TrimEnd('/') + "/");
+    client.Timeout = TimeSpan.FromSeconds(10);
+    if (!string.IsNullOrWhiteSpace(functionsOptions.FunctionKey))
+    {
+        client.DefaultRequestHeaders.Add("x-functions-key", functionsOptions.FunctionKey);
+    }
+});
+
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
     {

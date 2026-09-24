@@ -18,4 +18,12 @@
     </Content>
   </ItemGroup>
 
+  <!-- The Azure Functions project lives in a sub-folder of this solution; keep its files out of the web project. -->
+  <ItemGroup>
+    <Compile Remove="GiftOfTheGivers.Functions\**" />
+    <Content Remove="GiftOfTheGivers.Functions\**" />
+    <EmbeddedResource Remove="GiftOfTheGivers.Functions\**" />
+    <None Remove="GiftOfTheGivers.Functions\**" />
+  </ItemGroup>
+
 </Project>
