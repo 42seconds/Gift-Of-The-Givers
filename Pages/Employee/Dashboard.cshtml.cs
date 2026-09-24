@@ -1,110 +1,109 @@
-using GiftOfTheGivers.Data;
-using GiftOfTheGivers.Models;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.Data.SqlClient;
+using gift_of_the_givers.Data;
+using gift_of_the_givers.Models;
+using gift_of_the_givers.Services;
 
-namespace GiftOfTheGivers.Pages.Employee
+namespace gift_of_the_givers.Pages.Employee
 {
-    // Only signed-in users in the "Employee" role can reach this page.
-    // This is the Part 1 requirement for ASP.NET Identity role-based access —
-    // Donors and anonymous visitors are redirected to the login page automatically
-    // by the Identity middleware if they try to hit /Employee/Dashboard directly.
     [Authorize(Roles = "Employee")]
     public class DashboardModel : PageModel
     {
         private readonly ApplicationDbContext _db;
-        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly AccountService _accountService;
 
-        public DashboardModel(ApplicationDbContext db, UserManager<ApplicationUser> userManager)
+        public DashboardModel(ApplicationDbContext db, AccountService accountService)
         {
             _db = db;
-            _userManager = userManager;
+            _accountService = accountService;
         }
 
-        // ---- Data shown on the dashboard (read-only, populated in OnGet) ----
-        public List<Donation> RecentDonations { get; set; } = new();
-        public List<VolunteerSignup> Volunteers { get; set; } = new();
-        public List<ProjectUpdate> Updates { get; set; } = new();
-
-        // ---- Simple KPI figures for the stat cards at the top of the page ----
-        // NOTE: donations are kept separated by currency rather than converted
-        // to a single total, since the Donation model doesn't store exchange
-        // rates and inventing a conversion factor here would be misleading.
-        public int TotalDonationCount { get; set; }
-        public decimal TotalZar { get; set; }
-        public decimal TotalUsd { get; set; }
-        public decimal TotalEur { get; set; }
-        public int TotalVolunteerCount { get; set; }
-        public int TotalUpdateCount { get; set; }
-
-        // Bound to the "Post a Project Update" form below.
         [BindProperty]
-        public ProjectUpdate NewUpdate { get; set; } = new();
+        public ProjectUpdate ProjectUpdate { get; set; } = new();
 
+        public int DonationCount { get; set; }
+
+        public decimal DonationTotal { get; set; }
+
+        public int VolunteerCount { get; set; }
+
+        public int UpdateCount { get; set; }
+
+        public IList<global::gift_of_the_givers.Models.Donation> RecentDonations { get; set; } = new List<global::gift_of_the_givers.Models.Donation>();
+
+        public IList<VolunteerSignup> RecentVolunteers { get; set; } = new List<VolunteerSignup>();
+
+        public IList<ProjectUpdate> ProjectUpdates { get; set; } = new List<ProjectUpdate>();
+
+        // Loads the current dashboard snapshot, including summary metrics and the latest records from each table.
         public async Task OnGetAsync()
         {
             await LoadDashboardDataAsync();
         }
 
-        // Handles the "Post a Project Update" form submission.
-        // Field employees use this to publish situation reports that show
-        // up on the dashboard's "Posted Updates" feed.
+        // Stores a new project update and then reloads the dashboard so the employee can see it immediately.
         public async Task<IActionResult> OnPostAsync()
         {
-            // Only validate the two fields the employee actually fills in —
-            // PostedByUserId/PostedByName/PostedOn are set below, not by the form,
-            // so we don't want ModelState failing on those.
-            ModelState.Remove(nameof(NewUpdate.PostedByUserId));
-
-            if (string.IsNullOrWhiteSpace(NewUpdate.Title) || string.IsNullOrWhiteSpace(NewUpdate.Description))
+            if (string.IsNullOrWhiteSpace(ProjectUpdate.Title) || string.IsNullOrWhiteSpace(ProjectUpdate.Description))
             {
                 TempData["Error"] = "Title and description are required.";
                 await LoadDashboardDataAsync();
                 return Page();
             }
 
-            var user = await _userManager.GetUserAsync(User);
+            var user = await _accountService.GetCurrentUserAsync();
+            ProjectUpdate.PostedByUserId = user?.Id ?? "unknown";
+            ProjectUpdate.PostedByName = user?.DisplayName ?? user?.Email;
+            ProjectUpdate.PostedOn = DateTime.UtcNow;
 
-            NewUpdate.PostedByUserId = user?.Id ?? "unknown";
-            NewUpdate.PostedByName = user?.FullName ?? user?.Email;
-            NewUpdate.PostedOn = DateTime.UtcNow;
-
-            _db.ProjectUpdates.Add(NewUpdate);
-            await _db.SaveChangesAsync();
-
-            TempData["Notification"] = "Field update published successfully.";
-
-            // Redirect-after-post avoids a duplicate submission if the employee refreshes the page.
-            return RedirectToPage();
+            try
+            {
+                await _db.InsertProjectUpdateAsync(ProjectUpdate);
+                TempData["Success"] = "Project update posted successfully.";
+                return RedirectToPage("/Employee/Dashboard");
+            }
+            catch (SqlException)
+            {
+                TempData["Error"] = "We could not post the update because the database connection is unavailable right now.";
+                await LoadDashboardDataAsync();
+                return Page();
+            }
         }
 
-        // Pulls everything the dashboard needs in one place so both OnGet
-        // and the "invalid form" path in OnPost can reuse it without duplicating queries.
+        // Pulls the employee dashboard data in one place so the page model stays easy to follow.
         private async Task LoadDashboardDataAsync()
         {
-            RecentDonations = await _db.Donations
-                .OrderByDescending(d => d.DonationDate)
-                .Take(20)
-                .ToListAsync();
+            DonationCount = RecentDonations.Count;
+            DonationTotal = 0m;
+            VolunteerCount = 0;
+            UpdateCount = 0;
 
-            Volunteers = await _db.VolunteerSignups
-                .OrderByDescending(v => v.SubmittedOn)
-                .ToListAsync();
+            try
+            {
+                RecentDonations = (await _db.GetRecentDonationsAsync(10)).ToList();
+                RecentVolunteers = (await _db.GetRecentVolunteerSignupsAsync(10)).ToList();
+                ProjectUpdates = (await _db.GetAllProjectUpdatesAsync()).ToList();
 
-            Updates = await _db.ProjectUpdates
-                .OrderByDescending(u => u.PostedOn)
-                .ToListAsync();
+                DonationCount = RecentDonations.Count;
+                DonationTotal = RecentDonations.Sum(d => d.Amount);
+                VolunteerCount = RecentVolunteers.Count;
+                UpdateCount = ProjectUpdates.Count;
+            }
+            catch (SqlException)
+            {
+                RecentDonations = new List<global::gift_of_the_givers.Models.Donation>();
+                RecentVolunteers = new List<VolunteerSignup>();
+                ProjectUpdates = new List<ProjectUpdate>();
 
-            TotalDonationCount = await _db.Donations.CountAsync();
-            TotalZar = await _db.Donations.Where(d => d.Currency == Currency.ZAR).SumAsync(d => (decimal?)d.Amount) ?? 0;
-            TotalUsd = await _db.Donations.Where(d => d.Currency == Currency.USD).SumAsync(d => (decimal?)d.Amount) ?? 0;
-            TotalEur = await _db.Donations.Where(d => d.Currency == Currency.EUR).SumAsync(d => (decimal?)d.Amount) ?? 0;
+                DonationCount = 0;
+                DonationTotal = 0m;
+                VolunteerCount = 0;
+                UpdateCount = 0;
 
-            TotalVolunteerCount = await _db.VolunteerSignups.CountAsync();
-            TotalUpdateCount = await _db.ProjectUpdates.CountAsync();
+                TempData["Error"] = "Employee dashboard data is unavailable because the database connection could not be reached.";
+            }
         }
     }
 }

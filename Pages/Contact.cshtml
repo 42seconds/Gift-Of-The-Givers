@@ -1,0 +1,97 @@
+@page
+@{
+    ViewData["Title"] = "Contact";
+}
+
+<section class="page-section page-section--light">
+    <div class="content-wrap">
+        <div class="section-heading">
+            <span class="kicker">Get in touch</span>
+            <h1 class="section-title">Contact and operations centers</h1>
+            <p class="section-copy">
+                Reach the coordination team, logistics hubs, or a regional office with the same calm editorial feel
+                used across the rest of the portal.
+            </p>
+        </div>
+
+        <div class="panel panel--accent" style="margin-top:1.5rem;">
+            <div class="panel-grid" style="align-items:center;">
+                <div>
+                    <span class="kicker" style="background:rgba(0,0,0,0.08);color:#151f00;">24/7 hotline</span>
+                    <h2 class="panel__title" style="margin-top:0.85rem;">0800 786 911</h2>
+                    <p class="panel__text" style="color:rgba(21,31,0,0.82);">
+                        For emergencies and urgent coordination, call the disaster relief line or use the forms below.
+                    </p>
+                </div>
+                <div class="receipt-box">
+                    <div class="receipt-row"><span>International</span><span class="receipt-value">+27 33 345 0163</span></div>
+                    <div class="receipt-row"><span>Email</span><span class="receipt-value">info@giftofthegivers.org</span></div>
+                    <div class="receipt-row"><span>Head office</span><span class="receipt-value">Pietermaritzburg</span></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="two-up" style="margin-top:1.5rem;">
+            <div class="form-card">
+                <h2 class="form-card__title">Send a message</h2>
+                <p class="muted-text">This contact form is a visual companion to the rest of the portal design.</p>
+
+                <form class="form-grid" method="get" style="margin-top:1.25rem;">
+                    <div class="form-grid form-grid--two">
+                        <div class="field">
+                            <label for="name">Your name</label>
+                            <input id="name" name="name" class="input" placeholder="Dr. Fatima Khan" />
+                        </div>
+                        <div class="field">
+                            <label for="email">Email address</label>
+                            <input id="email" name="email" type="email" class="input" placeholder="fatima.khan@example.com" />
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <label for="subject">Subject</label>
+                        <select id="subject" name="subject" class="select">
+                            <option>General inquiry</option>
+                            <option>Disaster relief request</option>
+                            <option>Corporate partnership</option>
+                            <option>Media and press</option>
+                        </select>
+                    </div>
+
+                    <div class="field">
+                        <label for="message">Message</label>
+                        <textarea id="message" name="message" class="textarea" rows="5" placeholder="Tell us what you need help with..."></textarea>
+                    </div>
+
+                    <div class="button-row">
+                        <button type="submit" class="ui-button ui-button--primary">Send message</button>
+                        <a class="ui-button ui-button--secondary" asp-page="/Donation/Index">Donate instead</a>
+                    </div>
+                </form>
+            </div>
+
+            <div class="panel">
+                <span class="kicker">Regional hubs</span>
+                <h2 class="panel__title" style="margin-top:0.85rem;">National and regional offices</h2>
+
+                <div class="hub-list" style="margin-top:1rem;">
+                    <article class="hub-card">
+                        <h3 class="hub-card__title">Pietermaritzburg Headquarters</h3>
+                        <p class="hub-card__copy">290 Prince Alfred Street, Pietermaritzburg, 3201</p>
+                        <p class="hub-card__meta">Tel: +27 33 345 0163</p>
+                    </article>
+                    <article class="hub-card">
+                        <h3 class="hub-card__title">Johannesburg Logistics Hub</h3>
+                        <p class="hub-card__copy">Bramley Central Logistics Depot, Johannesburg, 2090</p>
+                        <p class="hub-card__meta">Tel: +27 11 887 6554</p>
+                    </article>
+                    <article class="hub-card">
+                        <h3 class="hub-card__title">Cape Town Operations Depot</h3>
+                        <p class="hub-card__copy">Athlone Industrial Park, Cape Town, 7764</p>
+                        <p class="hub-card__meta">Tel: +27 21 697 1010</p>
+                    </article>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

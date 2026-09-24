@@ -1,0 +1,93 @@
+@page
+@model gift_of_the_givers.Pages.Account.LoginModel
+@{
+    ViewData["Title"] = "Log in";
+}
+
+<section class="page-section page-section--light auth-page">
+    <div class="content-wrap">
+        <div class="split-grid">
+            <div class="impact-card">
+                <span class="kicker">Member access</span>
+                <h1 class="impact-card__title">Sign in to your account</h1>
+                <p class="impact-card__copy">
+                    Use one login to record donations, submit volunteer details, and reach the employee dashboard when your role allows it.
+                </p>
+
+                <div class="impact-list">
+                    <div class="impact-item">
+                        <div class="impact-item__icon">A</div>
+                        <div>
+                            <p class="impact-item__label">Authentication</p>
+                            <p class="impact-item__copy">Cookie-based sign-in with role claims for employees.</p>
+                        </div>
+                    </div>
+                    <div class="impact-item">
+                        <div class="impact-item__icon">D</div>
+                        <div>
+                            <p class="impact-item__label">Donor tools</p>
+                            <p class="impact-item__copy">Track your donations and keep the flow in one place.</p>
+                        </div>
+                    </div>
+                    <div class="impact-item">
+                        <div class="impact-item__icon">E</div>
+                        <div>
+                            <p class="impact-item__label">Employee access</p>
+                            <p class="impact-item__copy">Authorized employees can review data and post updates.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-card">
+                <h2 class="form-card__title">Welcome back</h2>
+                <p class="muted-text">Sign in with the email address and password attached to your account.</p>
+
+                <form method="post" class="form-grid auth-form">
+                    <input type="hidden" asp-for="ReturnUrl" />
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                    <div class="field">
+                        <label asp-for="Input.Email">Email address</label>
+                        <input asp-for="Input.Email" class="input" autocomplete="email" />
+                        <span asp-validation-for="Input.Email" class="text-danger"></span>
+                    </div>
+
+                    <div class="field">
+                        <label asp-for="Input.Password">Password</label>
+                        <div class="password-field">
+                            <input asp-for="Input.Password" class="input password-field__input" autocomplete="current-password" data-password-input />
+                            <button type="button" class="password-toggle" data-password-toggle aria-label="Show password" aria-pressed="false">
+                                <svg class="password-toggle__icon" data-password-icon="show" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                                    <path d="M2.5 12S6.5 5.5 12 5.5 21.5 12 21.5 12 17.5 18.5 12 18.5 2.5 12 2.5 12Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
+                                    <circle cx="12" cy="12" r="2.75" stroke="currentColor" stroke-width="1.8" />
+                                </svg>
+                                <svg class="password-toggle__icon" data-password-icon="hide" viewBox="0 0 24 24" fill="none" aria-hidden="true" hidden>
+                                    <path d="M4 4l16 16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+                                    <path d="M10.9 10.9A2 2 0 1 0 13.1 13.1" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+                                    <path d="M8.7 8.7C5.8 10.2 3.8 12 2.5 12c0 0 4 6.5 9.5 6.5 1.4 0 2.7-.3 3.9-.8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+                                    <path d="M9.4 5.7A10.2 10.2 0 0 1 12 5.5c5.5 0 9.5 6.5 9.5 6.5a19.1 19.1 0 0 1-3.2 3.9" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+                                </svg>
+                            </button>
+                        </div>
+                        <span asp-validation-for="Input.Password" class="text-danger"></span>
+                    </div>
+
+                    <label class="check-row">
+                        <input asp-for="Input.RememberMe" type="checkbox" />
+                        <span>Remember me</span>
+                    </label>
+
+                    <div class="button-row auth-actions">
+                        <a class="ui-button ui-button--secondary" asp-page="/Account/Register">Need an account?</a>
+                        <button type="submit" class="ui-button ui-button--primary">Log in</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

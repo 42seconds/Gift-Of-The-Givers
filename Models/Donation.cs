@@ -1,35 +1,40 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace GiftOfTheGivers.Models
+namespace gift_of_the_givers.Models;
+
+public enum Currency
 {
-    public enum Currency { ZAR, USD, EUR }
-    public enum DonationFrequency { OneTime, Recurring }
+    ZAR,
+    USD,
+    EUR
+}
 
-    public class Donation
-    {
-        public int Id { get; set; }
+public enum DonationFrequency
+{
+    OneTime,
+    Recurring
+}
 
-        [Required, StringLength(100)]
-        public string DonorName { get; set; } = "Anonymous Donor";
+public class Donation
+{
+    public int Id { get; set; }
 
-        [EmailAddress]
-        public string? DonorEmail { get; set; }
+    [Required, StringLength(100)]
+    public string DonorName { get; set; } = "Anonymous Donor";
 
-        public bool IsAnonymous { get; set; }
+    [EmailAddress]
+    public string? DonorEmail { get; set; }
 
-        // Only set when a logged-in Donor makes the donation
-        public string? UserId { get; set; }
+    public bool IsAnonymous { get; set; }
 
-        [Range(10, 1000000, ErrorMessage = "Please enter a donation amount of at least 10.")]
-        public decimal Amount { get; set; }
+    public string? UserId { get; set; }
 
-        public Currency Currency { get; set; } = Currency.ZAR;
+    [Range(10, 1000000, ErrorMessage = "Please enter a donation amount of at least 10.")]
+    public decimal Amount { get; set; }
 
-        public DonationFrequency Frequency { get; set; } = DonationFrequency.OneTime;
+    public Currency Currency { get; set; } = Currency.ZAR;
 
-        public DateTime DonationDate { get; set; } = DateTime.UtcNow;
+    public DonationFrequency Frequency { get; set; } = DonationFrequency.OneTime;
 
-        // Generated once the donation is recorded, e.g. "GOTG-2026-000123"
-        public string CertificateReference { get; set; } = string.Empty;
-    }
+    public DateTime DonationDate { get; set; } = DateTime.UtcNow;
 }

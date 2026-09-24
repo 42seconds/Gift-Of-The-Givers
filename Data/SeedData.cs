@@ -1,73 +1,57 @@
-using GiftOfTheGivers.Models;
-using Microsoft.AspNetCore.Identity;
+using gift_of_the_givers.Models;
+using gift_of_the_givers.Services;
 
-namespace GiftOfTheGivers.Data
+namespace gift_of_the_givers.Data;
+
+public static class SeedData
 {
-    // Runs at startup to guarantee roles + at least one demo login of each type exist,
-    // so markers/testers can log in immediately without manual setup.
-    public static class SeedData
+    // Seeds a demo employee and donor so the prototype can be exercised immediately after startup.
+    public static async Task InitializeAsync(ApplicationDbContext db, AccountService accountService)
     {
-        public static async Task InitializeAsync(IServiceProvider services)
+        await accountService.EnsureSeedRolesAsync();
+
+        const string employeeEmail = "employee@giftofthegivers.org";
+        var employee = await db.FindUserByEmailAsync(employeeEmail);
+        if (employee is null)
         {
-            var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
-            var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
-            var db = services.GetRequiredService<ApplicationDbContext>();
-
-            string[] roles = { "Employee", "Donor" };
-            foreach (var role in roles)
+            employee = new ApplicationUser
             {
-                if (!await roleManager.RoleExistsAsync(role))
-                    await roleManager.CreateAsync(new IdentityRole(role));
-            }
+                UserName = employeeEmail,
+                Email = employeeEmail,
+                FirstName = "Thandiwe",
+                LastName = "Nkosi",
+                EmailConfirmed = true
+            };
 
-            // Demo Employee account
-            var employeeEmail = "employee@giftofthegivers.org";
-            if (await userManager.FindByEmailAsync(employeeEmail) is null)
-            {
-                var employee = new ApplicationUser
-                {
-                    UserName = employeeEmail,
-                    Email = employeeEmail,
-                    FullName = "Thandiwe Nkosi",
-                    Department = "Relief Operations",
-                    EmailConfirmed = true
-                };
-                var result = await userManager.CreateAsync(employee, "Employee@123");
-                if (result.Succeeded)
-                    await userManager.AddToRoleAsync(employee, "Employee");
-            }
+            await accountService.CreateUserAsync(employee, "Employee@123", "Employee");
+        }
 
-            // Demo Donor account
-            var donorEmail = "donor@example.com";
-            if (await userManager.FindByEmailAsync(donorEmail) is null)
+        const string donorEmail = "donor@example.com";
+        var donor = await db.FindUserByEmailAsync(donorEmail);
+        if (donor is null)
+        {
+            donor = new ApplicationUser
             {
-                var donor = new ApplicationUser
-                {
-                    UserName = donorEmail,
-                    Email = donorEmail,
-                    FullName = "Sipho Mokoena",
-                    EmailConfirmed = true
-                };
-                var result = await userManager.CreateAsync(donor, "Donor@123");
-                if (result.Succeeded)
-                    await userManager.AddToRoleAsync(donor, "Donor");
-            }
+                UserName = donorEmail,
+                Email = donorEmail,
+                FirstName = "Sipho",
+                LastName = "Mokoena",
+                EmailConfirmed = true
+            };
 
-            // Sample relief project update so the homepage/dashboard isn't empty
-            if (!db.ProjectUpdates.Any())
+            await accountService.CreateUserAsync(donor, "Donor@123", "Donor");
+        }
+
+        if (await db.CountProjectUpdatesAsync() == 0)
+        {
+            await db.InsertProjectUpdateAsync(new ProjectUpdate
             {
-                db.ProjectUpdates.Add(new ProjectUpdate
-                {
-                    Title = "KwaZulu-Natal Flood Relief - Phase 2",
-                    Description = "Distribution of food parcels and clean water continues across " +
-                        "affected communities. Over 3,000 households reached so far. Volunteers " +
-                        "with logistics and driving experience are still urgently needed.",
-                    PostedByUserId = "seed",
-                    PostedByName = "Thandiwe Nkosi",
-                    PostedOn = DateTime.UtcNow.AddDays(-2)
-                });
-                await db.SaveChangesAsync();
-            }
+                Title = "KwaZulu-Natal flood relief",
+                Description = "Prototype update showing how employee notes will appear in the dashboard. Volunteers with logistics and driving experience are still needed.",
+                PostedByUserId = employee.Id,
+                PostedByName = employee.DisplayName,
+                PostedOn = DateTime.UtcNow.AddDays(-2)
+            });
         }
     }
 }

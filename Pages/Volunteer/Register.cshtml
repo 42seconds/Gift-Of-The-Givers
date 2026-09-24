@@ -1,0 +1,97 @@
+@page
+@model gift_of_the_givers.Pages.Volunteer.RegisterModel
+@{
+    ViewData["Title"] = "Volunteer";
+}
+
+<section class="page-section page-section--light">
+    <div class="content-wrap">
+        <div class="split-grid">
+            <div class="impact-card">
+                <span class="kicker">Volunteer</span>
+                <h1 class="impact-card__title">Register as a volunteer</h1>
+                <p class="impact-card__copy">
+                    Tell us what you can help with and when you are available. The data is stored in the volunteer sign-up table for the employee team.
+                </p>
+
+                <div class="impact-list">
+                    <div class="impact-item">
+                        <div class="impact-item__icon">S</div>
+                        <div>
+                            <p class="impact-item__label">Skills</p>
+                            <p class="impact-item__copy">Add first aid, logistics, driving, translation, or any other helpful skill.</p>
+                        </div>
+                    </div>
+                    <div class="impact-item">
+                        <div class="impact-item__icon">A</div>
+                        <div>
+                            <p class="impact-item__label">Availability</p>
+                            <p class="impact-item__copy">Share whether you are weekends only, evenings, or on call for crisis response.</p>
+                        </div>
+                    </div>
+                    <div class="impact-item">
+                        <div class="impact-item__icon">C</div>
+                        <div>
+                            <p class="impact-item__label">Contact</p>
+                            <p class="impact-item__copy">The team can follow up using the email and phone number you provide.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-card">
+                <h2 class="form-card__title">Volunteer registration</h2>
+                <p class="muted-text">Complete the fields below and we will keep your application with the rest of the volunteer records.</p>
+
+                <form method="post" class="form-grid auth-form">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                    <div class="field">
+                        <label asp-for="Signup.FullName">Full name</label>
+                        <input asp-for="Signup.FullName" class="input" />
+                        <span asp-validation-for="Signup.FullName" class="text-danger"></span>
+                    </div>
+
+                    <div class="field">
+                        <label asp-for="Signup.Email">Email</label>
+                        <input asp-for="Signup.Email" class="input" />
+                        <span asp-validation-for="Signup.Email" class="text-danger"></span>
+                    </div>
+
+                    <div class="field">
+                        <label asp-for="Signup.PhoneNumber">Phone number</label>
+                        <input asp-for="Signup.PhoneNumber" class="input" placeholder="e.g. 071 234 5678" />
+                        <span asp-validation-for="Signup.PhoneNumber" class="text-danger"></span>
+                    </div>
+
+                    <div class="field">
+                        <label asp-for="Signup.Skills">Skills</label>
+                        <input asp-for="Signup.Skills" class="input" placeholder="e.g. First Aid, Driving, Logistics, Translation" />
+                        <span asp-validation-for="Signup.Skills" class="text-danger"></span>
+                    </div>
+
+                    <div class="field">
+                        <label asp-for="Signup.Availability">Availability</label>
+                        <select asp-for="Signup.Availability" class="select">
+                            <option value="">Select availability...</option>
+                            <option value="Weekends only">Weekends only</option>
+                            <option value="Evenings">Evenings</option>
+                            <option value="Full-time during crisis">Full-time during crisis</option>
+                            <option value="Flexible / On-call">Flexible / On-call</option>
+                        </select>
+                        <span asp-validation-for="Signup.Availability" class="text-danger"></span>
+                    </div>
+
+                    <div class="button-row">
+                        <a class="ui-button ui-button--secondary" asp-page="/Index">Back home</a>
+                        <button type="submit" class="ui-button ui-button--primary">Submit application</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -1,0 +1,74 @@
+@page "{id:int}"
+@model gift_of_the_givers.Pages.Donation.CertificateModel
+@{
+    ViewData["Title"] = "Donation Certificate";
+}
+
+<section class="page-section page-section--light">
+    <div class="content-wrap">
+        <div class="section-heading">
+            <span class="kicker">Certificate</span>
+            <h1 class="section-title">Placeholder tax certificate</h1>
+            <p class="section-copy">
+                This certificate is generated from the recorded donation and can be displayed on screen or downloaded as a PDF.
+            </p>
+        </div>
+
+        <div class="certificate-layout">
+            <div class="panel panel--accent certificate-panel">
+                <span class="kicker" style="background:rgba(0,0,0,0.08);color:#151f00;">Issued certificate</span>
+                <h2 class="panel__title" style="margin-top:0.85rem;">Gift of the Givers Foundation</h2>
+                <p class="panel__text" style="color:rgba(21,31,0,0.82);">
+                    This is a placeholder tax certificate for prototype use only. It confirms that a donation record was created in the system.
+                </p>
+
+                <div class="receipt-box">
+                    <div class="receipt-row">
+                        <span>Certificate no.</span>
+                        <span class="receipt-value">@Model.CertificateNumber</span>
+                    </div>
+                    <div class="receipt-row">
+                        <span>Donor</span>
+                        <span class="receipt-value">@Model.DonorDisplayName</span>
+                    </div>
+                    <div class="receipt-row">
+                        <span>Donation amount</span>
+                        <span class="receipt-value">@Model.Donation!.Currency @Model.Donation.Amount.ToString("N2")</span>
+                    </div>
+                    <div class="receipt-row">
+                        <span>Donation date</span>
+                        <span class="receipt-value">@Model.Donation.DonationDate.ToString("dd MMM yyyy HH:mm") UTC</span>
+                    </div>
+                    <div class="receipt-row">
+                        <span>Status</span>
+                        <span class="receipt-value">Placeholder certificate</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-card">
+                <h2 class="form-card__title">Download or continue</h2>
+                <p class="muted-text">
+                    Save the PDF copy now or return to the rest of the portal. The same certificate can be opened again any time from this record.
+                </p>
+
+                <div class="button-row certificate-actions">
+                    <a class="ui-button ui-button--primary" asp-page-handler="Pdf" asp-route-id="@Model.Donation!.Id">Download PDF</a>
+                    <a class="ui-button ui-button--secondary" asp-page="/Donation/Index">New donation</a>
+                </div>
+
+                <div class="mini-preview-row certificate-preview">
+                    <div class="mini-card">
+                        <div class="mini-card__head">
+                            <span class="mini-card__title">On-screen view</span>
+                            <span class="mini-card__stat">Ready</span>
+                        </div>
+                        <p class="muted-text">
+                            The page you are viewing is the placeholder certificate shown on screen for easy checking during the prototype stage.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

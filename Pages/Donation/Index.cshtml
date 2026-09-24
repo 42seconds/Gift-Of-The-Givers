@@ -1,0 +1,110 @@
+@page
+@model gift_of_the_givers.Pages.Donation.IndexModel
+@{
+    ViewData["Title"] = "Donate";
+}
+
+<section class="page-section page-section--light">
+    <div class="content-wrap">
+        <div class="split-grid">
+            <div class="form-card">
+                <span class="kicker">Donation</span>
+                <h1 class="form-card__title">Record a donation</h1>
+                <p class="muted-text">
+                    This page keeps the donation flow simple while still saving records through SQL Client.
+                </p>
+
+                <form method="post" class="form-grid auth-form">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                    @if (User.Identity?.IsAuthenticated == true)
+                    {
+                        <label class="check-row">
+                            <input asp-for="DonateAsGuest" type="checkbox" />
+                            <span>Donate as a guest instead of using my account details</span>
+                        </label>
+                    }
+
+                    <div class="field">
+                        <label asp-for="Donation.DonorName">Donor name</label>
+                        <input asp-for="Donation.DonorName" class="input" />
+                        <span asp-validation-for="Donation.DonorName" class="text-danger"></span>
+                    </div>
+
+                    <div class="field">
+                        <label asp-for="Donation.DonorEmail">Email</label>
+                        <input asp-for="Donation.DonorEmail" class="input" />
+                        <span asp-validation-for="Donation.DonorEmail" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-grid form-grid--two">
+                        <div class="field">
+                            <label asp-for="Donation.Amount">Amount</label>
+                            <input asp-for="Donation.Amount" class="input" />
+                            <span asp-validation-for="Donation.Amount" class="text-danger"></span>
+                        </div>
+                        <div class="field">
+                            <label asp-for="Donation.Currency">Currency</label>
+                            <select asp-for="Donation.Currency" asp-items="Html.GetEnumSelectList<Currency>()" class="select"></select>
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <label asp-for="Donation.Frequency">Frequency</label>
+                        <select asp-for="Donation.Frequency" asp-items="Html.GetEnumSelectList<DonationFrequency>()" class="select"></select>
+                    </div>
+
+                    <label class="check-row">
+                        <input asp-for="Donation.IsAnonymous" type="checkbox" />
+                        <span>Make this donation anonymous</span>
+                    </label>
+
+                    <div class="button-row">
+                        <a class="ui-button ui-button--secondary" asp-page="/Index">Back home</a>
+                        <button type="submit" class="ui-button ui-button--primary">Save donation</button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="panel panel--accent">
+                <span class="kicker">Donation note</span>
+                <h2 class="panel__title">A simple donation record</h2>
+                <p class="panel__text">
+                    The form stores donor details, amount, currency, and frequency in the SQL-backed donation table.
+                    After submission, the portal generates a placeholder tax certificate that can be viewed on screen or downloaded as PDF.
+                </p>
+
+                <div class="receipt-box">
+                    <div class="receipt-row">
+                        <span>Account linked</span>
+                        <span class="receipt-value">Optional</span>
+                    </div>
+                    <div class="receipt-row">
+                        <span>Anonymous support</span>
+                        <span class="receipt-value">Supported</span>
+                    </div>
+                    <div class="receipt-row">
+                        <span>Certificate</span>
+                        <span class="receipt-value">Generated after save</span>
+                    </div>
+                </div>
+
+                <div class="mini-preview-row">
+                    <div class="mini-card">
+                        <div class="mini-card__head">
+                            <span class="mini-card__title">Certificate preview</span>
+                            <span class="mini-card__stat">Ready</span>
+                        </div>
+                        <p class="muted-text">
+                            A placeholder tax certificate is created for every successful donation, even when the record is just a demo entry.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

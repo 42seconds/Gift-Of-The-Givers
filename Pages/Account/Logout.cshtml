@@ -1,0 +1,33 @@
+@page
+@model gift_of_the_givers.Pages.Account.LogoutModel
+@{
+    ViewData["Title"] = "Log out";
+}
+
+<section class="page-section page-section--light auth-page">
+    <div class="content-wrap">
+        <div class="split-grid">
+            <div class="impact-card">
+                <span class="kicker">Sign out</span>
+                <h1 class="impact-card__title">Log out of your session?</h1>
+                <p class="impact-card__copy">
+                    This clears the current authentication cookie and returns you to the home page. You can always sign back in again later.
+                </p>
+            </div>
+
+            <div class="form-card">
+                <h2 class="form-card__title">Confirm sign-out</h2>
+                <p class="muted-text">Use the button below if you want to end the current session right now.</p>
+
+                <form method="post" class="form-grid auth-form">
+                    <input type="hidden" asp-for="ReturnUrl" />
+
+                    <div class="button-row auth-actions">
+                        <a class="ui-button ui-button--secondary" asp-page="/Index">Cancel</a>
+                        <button type="submit" class="ui-button ui-button--primary">Yes, log out</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>

@@ -1,61 +1,55 @@
-using GiftOfTheGivers.Data;
-using GiftOfTheGivers.Models;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using QuestPDF.Infrastructure;
-
-// -------------------------------------------------------------------------
-// Gift of the Givers — Razor Pages web app
-//
-// This project is intentionally Razor Pages only (no MVC Controllers/Views).
-// Form handling that used to live in Controllers (Donation, Volunteer,
-// Employee) now lives in PageModel OnGet/OnPost handlers under /Pages.
-// -------------------------------------------------------------------------
+using gift_of_the_givers.Data;
+using gift_of_the_givers.Models;
+using gift_of_the_givers.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// QuestPDF community license (free for small orgs/non-profits/prototypes).
-// Used by Services/TaxCertificateGenerator.cs to produce the donation PDF.
-QuestPDF.Settings.License = LicenseType.Community;
+// Keep logging simple so startup warnings do not trip over Windows Event Log permissions.
+builder.Logging.ClearProviders();
+builder.Logging.AddConsole();
 
-// ---- Database ----
-// SQLite for local development/prototype use. To point this at Azure SQL
-// for deployment, swap the connection string in appsettings.json and change
-// UseSqlite(...) to UseSqlServer(...) here.
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")
-        ?? "Data Source=gotg.db"));
+// Register the small prototype stack: SQL Client data access, cookie auth, and Razor Pages.
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<ApplicationDbContext>();
+builder.Services.AddScoped<IPasswordHasher<ApplicationUser>, PasswordHasher<ApplicationUser>>();
+builder.Services.AddScoped<AccountService>();
 
-// ---- ASP.NET Core Identity with role-based access ----
-// AddRoles<IdentityRole>() enables the "Donor" / "Employee" roles used
-// throughout the app (see [Authorize(Roles = "Employee")] on the Dashboard
-// PageModel, and the role checks in Donate.cshtml).
-builder.Services.AddDefaultIdentity<ApplicationUser>(options =>
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options =>
     {
-        options.SignIn.RequireConfirmedAccount = false; // relaxed for prototype/coursework use
-        options.Password.RequireNonAlphanumeric = false;
-        options.Password.RequiredLength = 6;
-    })
-    .AddRoles<IdentityRole>()
-    .AddEntityFrameworkStores<ApplicationDbContext>();
+        options.LoginPath = "/Account/Login";
+        options.LogoutPath = "/Account/Logout";
+        options.AccessDeniedPath = "/Account/AccessDenied";
+        options.Cookie.Name = "GiftOfTheGivers.Auth";
+        options.SlidingExpiration = true;
+        options.ExpireTimeSpan = TimeSpan.FromDays(14);
+    });
 
-// Razor Pages is the only UI framework registered — this also covers the
-// scaffolded Identity UI pages (Login/Register/etc.), which are Razor Pages
-// themselves, shipped inside the Identity.UI package.
+builder.Services.AddAuthorization();
 builder.Services.AddRazorPages();
 
 var app = builder.Build();
 
-// ---- Seed database, roles, and a demo employee account ----
-// Runs once at startup: creates the SQLite file if it doesn't exist yet,
-// then ensures the "Donor"/"Employee" roles and a demo Employee login exist
-// so markers/testers can log in without manually creating an account.
+// Create the schema and seed a couple of demo users before requests start flowing through the app.
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
     var db = services.GetRequiredService<ApplicationDbContext>();
-    db.Database.EnsureCreated();
-    await SeedData.InitializeAsync(services);
+    var accountService = services.GetRequiredService<AccountService>();
+
+    // Keep the web host alive even if SQL Server is not installed or the local instance is offline.
+    try
+    {
+        await db.InitializeAsync();
+        await SeedData.InitializeAsync(db, accountService);
+    }
+    catch (Exception ex)
+    {
+        var logger = services.GetRequiredService<ILoggerFactory>().CreateLogger("Startup");
+        logger.LogWarning(ex, "Database initialization was skipped because the SQL connection could not be opened.");
+    }
 }
 
 if (!app.Environment.IsDevelopment())
@@ -64,12 +58,8 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
-app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
-
-// Authentication must run before Authorization so that [Authorize] attributes
-// (e.g. on the Employee Dashboard PageModel) have a signed-in user to check.
 app.UseAuthentication();
 app.UseAuthorization();
 

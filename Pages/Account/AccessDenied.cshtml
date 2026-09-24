@@ -1,0 +1,28 @@
+@page
+@{
+    ViewData["Title"] = "Access denied";
+}
+
+<section class="page-section page-section--light">
+    <div class="content-wrap">
+        <div class="split-grid">
+            <div class="impact-card">
+                <span class="kicker">Restricted area</span>
+                <h1 class="impact-card__title">Access denied</h1>
+                <p class="impact-card__copy">
+                    Your account does not currently have permission to view that page. Employee tools are limited to the employee role.
+                </p>
+            </div>
+
+            <div class="form-card">
+                <h2 class="form-card__title">What to do next</h2>
+                <p class="muted-text">Try signing in with the correct account or return to the home page.</p>
+
+                <div class="button-row">
+                    <a class="ui-button ui-button--secondary" asp-page="/Index">Back home</a>
+                    <a class="ui-button ui-button--primary" asp-page="/Account/Login">Log in</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

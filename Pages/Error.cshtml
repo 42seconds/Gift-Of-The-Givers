@@ -1,21 +1,41 @@
 @page
-@model GiftOfTheGivers.Pages.ErrorModel
+@model ErrorModel
 @{
     ViewData["Title"] = "Error";
 }
 
-<div class="w-full min-h-[60vh] flex items-center justify-center bg-[#eef2e3] px-4 py-16">
-    <div class="bg-white rounded-[16px] p-10 max-w-md w-full text-center border border-[#1b1c1b]/10 shadow-sm">
-        <h1 class="font-serif text-[28px] text-[#00271b] mb-3">Something went wrong.</h1>
-        <p class="text-[14px] text-[#404944] mb-6">
-            An unexpected error occurred. If this keeps happening, please contact the site administrator.
-        </p>
-        @if (Model.ShowRequestId)
-        {
-            <p class="text-[12px] text-[#a3a89f]">Request ID: <code>@Model.RequestId</code></p>
-        }
-        <a asp-page="/Index" class="inline-block mt-6 bg-[#c8f169] text-[#151f00] px-6 py-3 rounded-[4px] text-[14px] font-semibold hover:bg-[#add450]">
-            Return to Home
-        </a>
+<section class="page-section page-section--light">
+    <div class="content-wrap">
+        <div class="split-grid">
+            <div class="impact-card">
+                <span class="kicker">Error</span>
+                <h1 class="impact-card__title">Something went wrong</h1>
+                <p class="impact-card__copy">
+                    The request could not be completed. Please try again, or return home and continue from there.
+                </p>
+            </div>
+
+            <div class="form-card">
+                <h2 class="form-card__title">Diagnostics</h2>
+                <p class="muted-text">
+                    The detailed stack trace is shown only in development so production stays calm and simple.
+                </p>
+
+                @if (Model.ShowRequestId)
+                {
+                    <div class="receipt-box">
+                        <div class="receipt-row">
+                            <span>Request ID</span>
+                            <span class="receipt-value"><code>@Model.RequestId</code></span>
+                        </div>
+                    </div>
+                }
+
+                <div class="button-row">
+                    <a class="ui-button ui-button--secondary" asp-page="/Index">Back home</a>
+                    <a class="ui-button ui-button--primary" asp-page="/Contact">Contact support</a>
+                </div>
+            </div>
+        </div>
     </div>
-</div>
+</section>

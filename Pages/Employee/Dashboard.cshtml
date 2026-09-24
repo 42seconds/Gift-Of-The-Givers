@@ -1,158 +1,158 @@
 @page
-@model GiftOfTheGivers.Pages.Employee.DashboardModel
+@model gift_of_the_givers.Pages.Employee.DashboardModel
 @{
     ViewData["Title"] = "Employee Dashboard";
 }
 
-@* ======================================================================
-   Employee Dashboard
-   Only reachable by users in the "Employee" Identity role — enforced by
-   [Authorize(Roles = "Employee")] on the PageModel, not just hidden in the
-   UI. A Donor account (or anonymous visitor) hitting this URL directly gets
-   redirected to /Identity/Account/Login by the Identity middleware.
-   ====================================================================== *@
-
-<div class="w-full bg-[#eef2e3] min-h-screen">
-    <div class="max-w-[1200px] mx-auto px-4 md:px-10 py-10">
-
-        <div class="flex items-center justify-between mb-8">
-            <div>
-                <h1 class="font-serif text-[32px] md:text-[40px] text-[#00271b]">Employee Dashboard</h1>
-                <p class="text-[14px] text-[#404944]">Signed in as <strong>@User.Identity!.Name</strong></p>
-            </div>
-            <form asp-area="Identity" asp-page="/Account/Logout" method="post">
-                <button type="submit" class="text-[13px] font-semibold px-4 py-2 border border-[#1b1c1b]/20 rounded-[4px] hover:bg-white">Log out</button>
-            </form>
+<section class="page-section page-section--light">
+    <div class="content-wrap dashboard-shell">
+        <div class="impact-card">
+            <span class="kicker">Employee access</span>
+            <h1 class="impact-card__title">Employee dashboard</h1>
+            <p class="impact-card__copy">
+                Review the latest donations and volunteer sign-ups, then post short project updates from the same SQL-backed workspace.
+            </p>
         </div>
 
-        @* Success/error banners from TempData, set by OnPostAsync above *@
-        @if (TempData["Error"] is string err)
-        {
-            <div class="mb-6 p-4 rounded-[8px] bg-red-50 border border-red-200 text-red-700 text-sm">@err</div>
-        }
-
-        @* ---------------- KPI stat cards ---------------- *@
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
-            <div class="bg-white rounded-[12px] p-5 border border-[#1b1c1b]/10 shadow-sm">
-                <div class="text-[11px] uppercase tracking-wider text-[#707974] font-semibold mb-1">Total Donations</div>
-                <div class="font-serif text-[28px] text-[#00271b]">@Model.TotalDonationCount</div>
-            </div>
-            <div class="bg-[#043f2e] text-white rounded-[12px] p-5 border border-white/10 shadow-sm">
-                <div class="text-[11px] uppercase tracking-wider text-[#9cd2ba] font-semibold mb-1">ZAR Raised</div>
-                <div class="font-serif text-[24px] text-[#c8f169]">R @Model.TotalZar.ToString("N0")</div>
-            </div>
-            <div class="bg-white rounded-[12px] p-5 border border-[#1b1c1b]/10 shadow-sm">
-                <div class="text-[11px] uppercase tracking-wider text-[#707974] font-semibold mb-1">USD / EUR Raised</div>
-                <div class="font-serif text-[20px] text-[#00271b]">$@Model.TotalUsd.ToString("N0") · €@Model.TotalEur.ToString("N0")</div>
-            </div>
-            <div class="bg-white rounded-[12px] p-5 border border-[#1b1c1b]/10 shadow-sm">
-                <div class="text-[11px] uppercase tracking-wider text-[#707974] font-semibold mb-1">Volunteers / Updates</div>
-                <div class="font-serif text-[24px] text-[#00271b]">@Model.TotalVolunteerCount / @Model.TotalUpdateCount</div>
-            </div>
+        <div class="dashboard-summary-grid">
+            <article class="dashboard-card">
+                <span class="feature-badge">Donations</span>
+                <div class="summary-number">@Model.DonationCount</div>
+                <p class="muted-text">Recent donation entries loaded from the database.</p>
+            </article>
+            <article class="dashboard-card">
+                <span class="feature-badge">Total</span>
+                <div class="summary-number">@Model.DonationTotal.ToString("N2")</div>
+                <p class="muted-text">Combined value of the loaded donation records.</p>
+            </article>
+            <article class="dashboard-card">
+                <span class="feature-badge">Volunteers</span>
+                <div class="summary-number">@Model.VolunteerCount</div>
+                <p class="muted-text">Recent volunteer submissions ready for follow-up.</p>
+            </article>
+            <article class="dashboard-card">
+                <span class="feature-badge">Updates</span>
+                <div class="summary-number">@Model.UpdateCount</div>
+                <p class="muted-text">Project updates posted by employees.</p>
+            </article>
         </div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        <div class="dashboard-grid">
+            <div class="dashboard-card">
+                <h2 class="dashboard-card__title">Post a project update</h2>
+                <p class="muted-text">Write a short note that the team can see on the employee dashboard.</p>
 
-            @* ---------------- Left column: post update + recent donations ---------------- *@
-            <div class="lg:col-span-5 space-y-8">
+                <form method="post" class="form-grid auth-form">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
-                <div class="bg-white rounded-[16px] p-6 md:p-8 border border-[#1b1c1b]/10 shadow-sm">
-                    <h3 class="font-serif text-[22px] text-[#00271b] mb-4">Post a Project Update</h3>
+                    <div class="field">
+                        <label asp-for="ProjectUpdate.Title">Title</label>
+                        <input asp-for="ProjectUpdate.Title" class="input" />
+                        <span asp-validation-for="ProjectUpdate.Title" class="text-danger"></span>
+                    </div>
 
-                    @* Posts to this same page's OnPostAsync handler *@
-                    <form method="post" class="space-y-4">
-                        <div asp-validation-summary="ModelOnly" class="text-red-600 text-sm"></div>
+                    <div class="field">
+                        <label asp-for="ProjectUpdate.Description">Description</label>
+                        <textarea asp-for="ProjectUpdate.Description" class="textarea" rows="6"></textarea>
+                        <span asp-validation-for="ProjectUpdate.Description" class="text-danger"></span>
+                    </div>
 
-                        <div>
-                            <label class="block text-[12px] uppercase tracking-[0.06em] font-semibold text-[#404944] mb-2">Title</label>
-                            <input asp-for="NewUpdate.Title" class="w-full px-4 py-3 rounded-[4px] border border-[#c0c9c2] focus:ring-1 focus:ring-[#c8f169] focus:border-[#c8f169] outline-none" />
-                        </div>
-                        <div>
-                            <label class="block text-[12px] uppercase tracking-[0.06em] font-semibold text-[#404944] mb-2">Description</label>
-                            <textarea asp-for="NewUpdate.Description" rows="4" class="w-full px-4 py-3 rounded-[4px] border border-[#c0c9c2] focus:ring-1 focus:ring-[#c8f169] focus:border-[#c8f169] outline-none"></textarea>
-                        </div>
-                        <button type="submit" class="w-full bg-[#c8f169] text-[#151f00] py-3 rounded-[4px] text-[14px] font-bold hover:bg-[#add450]">
-                            Post Update
-                        </button>
-                    </form>
-                </div>
+                    <button type="submit" class="ui-button ui-button--primary">Post update</button>
+                </form>
+            </div>
 
-                <div class="bg-white rounded-[16px] p-6 md:p-8 border border-[#1b1c1b]/10 shadow-sm">
-                    <h3 class="font-serif text-[22px] text-[#00271b] mb-4">Recent Donations</h3>
-                    <div class="divide-y divide-[#1b1c1b]/10">
-                        @foreach (var d in Model.RecentDonations)
+            <div class="dashboard-card">
+                <h2 class="dashboard-card__title">Latest project updates</h2>
+                @if (Model.ProjectUpdates.Count == 0)
+                {
+                    <p class="muted-text">No updates posted yet.</p>
+                }
+                else
+                {
+                    <div class="update-grid">
+                        @foreach (var update in Model.ProjectUpdates)
                         {
-                            <div class="py-3 flex justify-between items-center text-sm">
-                                <span class="text-[#1b1c1b]">@(d.IsAnonymous ? "Anonymous" : d.DonorName)</span>
-                                <span class="font-semibold text-[#356854]">@d.Currency @d.Amount.ToString("N2")</span>
-                            </div>
-                        }
-                        @if (!Model.RecentDonations.Any())
-                        {
-                            <p class="py-3 text-sm text-[#707974]">No donations recorded yet.</p>
+                            <article class="update-card">
+                                <span class="status-badge status-badge--field">Update</span>
+                                <h3 class="update-card__title">@update.Title</h3>
+                                <p class="update-card__copy">@update.Description</p>
+                                <p class="update-card__meta">
+                                    Posted by @(update.PostedByName ?? "Employee") on @update.PostedOn.ToString("dd MMM yyyy")
+                                </p>
+                            </article>
                         }
                     </div>
-                </div>
+                }
             </div>
+        </div>
 
-            @* ---------------- Right column: posted updates + volunteer roster ---------------- *@
-            <div class="lg:col-span-7 space-y-8">
-
-                <div class="bg-white rounded-[16px] p-6 md:p-8 border border-[#1b1c1b]/10 shadow-sm">
-                    <h3 class="font-serif text-[22px] text-[#00271b] mb-4">Posted Updates</h3>
-                    @foreach (var u in Model.Updates)
-                    {
-                        <div class="border-b border-[#1b1c1b]/10 py-3 last:border-0">
-                            <div class="flex justify-between items-baseline">
-                                <strong class="text-[#1b1c1b] text-[15px]">@u.Title</strong>
-                                <span class="text-[11px] text-[#707974]">@u.PostedOn.ToString("dd MMM yyyy")</span>
-                            </div>
-                            <p class="text-[12px] text-[#707974] mb-1">by @u.PostedByName</p>
-                            <p class="text-[14px] text-[#404944]">@u.Description</p>
-                        </div>
-                    }
-                    @if (!Model.Updates.Any())
-                    {
-                        <p class="text-sm text-[#707974]">No updates posted yet.</p>
-                    }
-                </div>
-
-                <div class="bg-white rounded-[16px] p-6 md:p-8 border border-[#1b1c1b]/10 shadow-sm">
-                    <h3 class="font-serif text-[22px] text-[#00271b] mb-4">Volunteer Sign-Ups</h3>
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-sm">
-                            <thead>
-                                <tr class="text-left text-[11px] uppercase tracking-wider text-[#707974] border-b border-[#1b1c1b]/10">
-                                    <th class="py-2 pr-4">Name</th>
-                                    <th class="py-2 pr-4">Skills</th>
-                                    <th class="py-2 pr-4">Availability</th>
-                                    <th class="py-2 pr-4">Contact</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @{
-                                    // zebra-striping: pale-sage on every other row, matching the design system
-                                    var rowIndex = 0;
-                                }
-                                @foreach (var v in Model.Volunteers)
-                                {
-                                    rowIndex++;
-                                    <tr class="@(rowIndex % 2 == 0 ? "bg-[#eef2e3]" : "")">
-                                        <td class="py-2 pr-4 font-medium text-[#1b1c1b]">@v.FullName</td>
-                                        <td class="py-2 pr-4 text-[#404944]">@v.Skills</td>
-                                        <td class="py-2 pr-4 text-[#404944]">@v.Availability</td>
-                                        <td class="py-2 pr-4 text-[#404944]">@v.Email</td>
+        <div class="dashboard-grid">
+            <div class="dashboard-card">
+                <h2 class="dashboard-card__title">Recent donations</h2>
+                @if (Model.RecentDonations.Count == 0)
+                {
+                    <p class="muted-text">No donations recorded yet.</p>
+                }
+                else
+                {
+                    <div class="table-card">
+                        <div class="table-wrap">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Donor</th>
+                                        <th>Amount</th>
+                                        <th>Frequency</th>
+                                        <th>Date</th>
                                     </tr>
-                                }
-                            </tbody>
-                        </table>
-                        @if (!Model.Volunteers.Any())
+                                </thead>
+                                <tbody>
+                                    @foreach (var donation in Model.RecentDonations)
+                                    {
+                                        <tr>
+                                            <td>@(donation.IsAnonymous ? "Anonymous" : donation.DonorName)</td>
+                                            <td>@donation.Currency @donation.Amount.ToString("N2")</td>
+                                            <td>@donation.Frequency</td>
+                                            <td>@donation.DonationDate.ToString("dd MMM yyyy HH:mm")</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                }
+            </div>
+
+            <div class="dashboard-card">
+                <h2 class="dashboard-card__title">Recent volunteer sign-ups</h2>
+                @if (Model.RecentVolunteers.Count == 0)
+                {
+                    <p class="muted-text">No volunteer sign-ups yet.</p>
+                }
+                else
+                {
+                    <div class="volunteer-grid">
+                        @foreach (var volunteer in Model.RecentVolunteers)
                         {
-                            <p class="py-3 text-sm text-[#707974]">No volunteers registered yet.</p>
+                            var volunteerInitial = string.IsNullOrWhiteSpace(volunteer.FullName)
+                                ? "?"
+                                : volunteer.FullName.Trim()[0].ToString().ToUpperInvariant();
+
+                            <article class="roster-card">
+                                <span class="roster-card__icon">@volunteerInitial</span>
+                                <h3 class="roster-card__title">@volunteer.FullName</h3>
+                                <p class="roster-card__copy">@volunteer.Email</p>
+                                <p class="roster-card__meta">Availability: @volunteer.Availability</p>
+                                <p class="roster-card__copy" style="margin-top:0.5rem;">Skills: @volunteer.Skills</p>
+                            </article>
                         }
                     </div>
-                </div>
+                }
             </div>
         </div>
     </div>
-</div>
+</section>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -1,0 +1,81 @@
+@page
+@{
+    ViewData["Title"] = "Our Work";
+}
+
+<section class="page-section page-section--light">
+    <div class="content-wrap">
+        <div class="section-heading">
+            <span class="kicker">Our work</span>
+            <h1 class="section-title">Active disaster projects and relief programs</h1>
+            <p class="section-copy">
+                The portal mirrors the reference app's initiative-led layout while keeping your current donation,
+                volunteer, and employee features intact.
+            </p>
+        </div>
+
+        <div class="initiative-grid">
+            <article class="initiative-card">
+                <span class="initiative-card__badge">Disaster response</span>
+                <h2 class="initiative-card__title">Immediate action force</h2>
+                <p class="initiative-card__copy">Rapid mobilization for floods, earthquakes, and conflict response.</p>
+                <div class="initiative-card__footer">
+                    <div class="progress-copy"><span>Response readiness</span><span>92%</span></div>
+                    <div class="progress-track"><div class="progress-fill" style="width:92%"></div></div>
+                </div>
+            </article>
+
+            <article class="initiative-card">
+                <span class="initiative-card__badge">Medical relief</span>
+                <h2 class="initiative-card__title">Field hospitals and surgical support</h2>
+                <p class="initiative-card__copy">Protect vulnerable clinics with equipment, medicines, and surgical missions.</p>
+                <div class="initiative-card__footer">
+                    <div class="progress-copy"><span>Medical outreach</span><span>78%</span></div>
+                    <div class="progress-track"><div class="progress-fill" style="width:78%"></div></div>
+                </div>
+            </article>
+
+            <article class="initiative-card">
+                <span class="initiative-card__badge">Volunteer programs</span>
+                <h2 class="initiative-card__title">Trained response networks</h2>
+                <p class="initiative-card__copy">Coordinate volunteers, field teams, and support staff through one intake flow.</p>
+                <div class="initiative-card__footer">
+                    <div class="progress-copy"><span>Active volunteers</span><span>342</span></div>
+                    <div class="progress-track"><div class="progress-fill" style="width:65%"></div></div>
+                </div>
+            </article>
+
+            <article class="initiative-card">
+                <span class="initiative-card__badge">Community dev</span>
+                <h2 class="initiative-card__title">Water and food security</h2>
+                <p class="initiative-card__copy">Long-term projects for boreholes, gardens, and rebuilding work.</p>
+                <div class="initiative-card__footer">
+                    <div class="progress-copy"><span>Projects active</span><span>14</span></div>
+                    <div class="progress-track"><div class="progress-fill" style="width:54%"></div></div>
+                </div>
+            </article>
+
+            <article class="initiative-card">
+                <span class="initiative-card__badge">Family support</span>
+                <h2 class="initiative-card__title">Direct nutritional aid</h2>
+                <p class="initiative-card__copy">Sponsor a family with essentials, hygiene kits, and winter supplies.</p>
+                <div class="initiative-card__footer">
+                    <div class="progress-copy"><span>Families supported</span><span>1,240</span></div>
+                    <div class="progress-track"><div class="progress-fill" style="width:74%"></div></div>
+                </div>
+            </article>
+        </div>
+
+        <div class="panel panel--accent" style="margin-top:1.5rem;">
+            <span class="kicker" style="background:rgba(0,0,0,0.08);color:#151f00;">Keep going</span>
+            <h2 class="panel__title" style="margin-top:0.85rem;">Support the next field deployment</h2>
+            <p class="panel__text" style="color:rgba(21,31,0,0.82);">
+                Donations and volunteer registrations feed the same operational workflow used by the employee dashboard.
+            </p>
+            <div class="button-row">
+                <a class="ui-button ui-button--secondary" asp-page="/Donation/Index">Donate now</a>
+                <a class="ui-button ui-button--secondary" asp-page="/Volunteer/Register">Volunteer</a>
+            </div>
+        </div>
+    </div>
+</section>

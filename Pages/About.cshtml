@@ -1,0 +1,77 @@
+@page
+@{
+    ViewData["Title"] = "About";
+
+    var aboutEditorial = "https://lh3.googleusercontent.com/aida-public/AB6AXuCpQdlyxnZp_wSV3i9j6iL92x63MOSLQ2ydz8wN7iDQazYqsSC21vFntCjKYdtsIX-WGp1Uxwl3Zdp2vYiy9jVP_UQZ8PMaoy4ZZEETjVz-zFB-3_IrazE7Nt37lJw7Sg0-8-X_13mXLBMr2IzO4avXo_IuKVvayR2PNRXKLlCa64MxMGHU_yKiXyyrF52bZGaUAR89JUH895MpLzdUk19OODo_V7K_MbV1FAVAIy6DXVRk6PeeEA1_zA";
+}
+
+<section class="page-section page-section--light">
+    <div class="content-wrap">
+        <div class="section-heading">
+            <span class="kicker">Our foundation</span>
+            <h1 class="section-title">Restoring hope, rebuilding lives.</h1>
+            <p class="section-copy">
+                Gift of the Givers is a disaster response and humanitarian aid organisation. This portal keeps that
+                identity while bringing the Razor Pages flows into the same visual system.
+            </p>
+        </div>
+
+        <div class="hero-media" style="min-height:24rem; margin-top:2rem;">
+            <img src="@aboutEditorial" alt="Gift of the Givers humanitarian team on field mission" />
+            <div class="hero-stat">
+                <p class="hero-stat__label">Founded in 1992</p>
+                <p class="hero-stat__text">Built to support communities with unconditional humanitarian assistance.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="page-section page-section--dark">
+    <div class="content-wrap">
+        <div class="initiative-grid" style="grid-template-columns:repeat(2,minmax(0,1fr));">
+            <article class="initiative-card" style="background:rgba(255,255,255,0.05);border-color:rgba(255,255,255,0.08);color:#fff;">
+                <span class="feature-badge">45+ countries</span>
+                <h2 class="initiative-card__title" style="color:#fff;">Global reach</h2>
+                <p class="initiative-card__copy" style="color:rgba(255,255,255,0.82);">Deployments across Africa, the Middle East, and disaster zones worldwide.</p>
+            </article>
+            <article class="initiative-card" style="background:rgba(255,255,255,0.05);border-color:rgba(255,255,255,0.08);color:#fff;">
+                <span class="feature-badge">Unconditional</span>
+                <h2 class="initiative-card__title" style="color:#fff;">Human dignity first</h2>
+                <p class="initiative-card__copy" style="color:rgba(255,255,255,0.82);">Assistance is delivered regardless of background, religion, or nationality.</p>
+            </article>
+        </div>
+    </div>
+</section>
+
+<section class="page-section page-section--light">
+    <div class="content-wrap">
+        <div class="section-heading">
+            <span class="kicker">Guiding principles</span>
+            <h2 class="section-title">A calm, trustworthy portal for relief operations</h2>
+            <p class="section-copy">The same editorial look carries through donations, volunteer intake, and employee work.</p>
+        </div>
+
+        <div class="initiative-grid">
+            <article class="initiative-card">
+                <span class="initiative-card__badge">Aid</span>
+                <h3 class="initiative-card__title">Unconditional support</h3>
+                <p class="initiative-card__copy">Deliver help based on need, not on affiliation.</p>
+            </article>
+            <article class="initiative-card">
+                <span class="initiative-card__badge">Trust</span>
+                <h3 class="initiative-card__title">Transparent operations</h3>
+                <p class="initiative-card__copy">Keep the experience clear, readable, and easy to follow.</p>
+            </article>
+            <article class="initiative-card">
+                <span class="initiative-card__badge">Recovery</span>
+                <h3 class="initiative-card__title">Long-term resilience</h3>
+                <p class="initiative-card__copy">Support beyond the first response with sustainable programs.</p>
+            </article>
+        </div>
+
+        <div class="button-row" style="margin-top:1.5rem;">
+            <a class="ui-button ui-button--secondary" asp-page="/Donation/Index">Donate now</a>
+            <a class="ui-button ui-button--secondary" asp-page="/Volunteer/Register">Volunteer</a>
+        </div>
+    </div>
+</section>

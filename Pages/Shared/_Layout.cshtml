@@ -2,51 +2,156 @@
 <html lang="en">
 <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="light" />
     <title>@ViewData["Title"] - Gift of the Givers</title>
-
-    <!-- Fonts: Lora (serif headings) + Inter (sans body) -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-
-    <!--
-      Tailwind via Play CDN — fast path for a coursework prototype.
-      For a production build this should be replaced with the Tailwind CLI
-      compiled into wwwroot/css/site.css, but this keeps every [#hex]
-      utility class from the design ported as-is without a build step.
-    -->
-    <script src="https://cdn.tailwindcss.com"></script>
-
-    <style>
-        body { font-family: 'Inter', system-ui, -apple-system, sans-serif; }
-        h1, h2, h3, h4, h5, h6, .font-serif { font-family: 'Lora', Georgia, serif; }
-        .font-sans { font-family: 'Inter', system-ui, -apple-system, sans-serif; }
-    </style>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Lora:wght@400;500;700&display=swap" />
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 </head>
-<body class="min-h-screen flex flex-col bg-[#eef2e3] antialiased selection:bg-[#c8f169] selection:text-[#151f00]">
-
-    <partial name="_Nav" />
-
-    <!-- Toast notification (server round-trip driven via TempData) -->
-    @if (TempData["Notification"] is string notice)
-    {
-        <div id="toast" class="fixed bottom-6 right-6 z-50 bg-[#043f2e] text-white px-5 py-3.5 rounded-[8px] shadow-2xl border border-[#c8f169]/30 flex items-center gap-3">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#c8f169" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-            <span class="font-sans text-[14px] font-medium">@notice</span>
-            <button onclick="document.getElementById('toast').remove()" class="text-white/70 hover:text-white ml-2 p-1">✕</button>
-        </div>
-        <script>
-            setTimeout(() => { const t = document.getElementById('toast'); if (t) t.remove(); }, 4500);
-        </script>
+<body>
+    @{
+        var currentPath = (Context.Request.Path.Value ?? string.Empty).ToLowerInvariant();
     }
+    <div class="page-shell">
+        <header class="topbar site-header">
+            <div class="topbar__inner">
+                <a class="brand" asp-page="/Index" aria-label="Gift of the Givers home">
+                    <svg class="brand__logo" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                        <circle cx="50" cy="50" r="48" fill="#043f2e" />
+                        <circle cx="50" cy="50" r="39" stroke="#c8f169" stroke-width="7" />
+                        <path d="M50 26V74M26 50H74" stroke="#c8f169" stroke-width="7" stroke-linecap="round" />
+                    </svg>
+                    <span class="brand__title">
+                        <span class="brand__name">Gift of the Givers</span>
+                        <span class="brand__tag">Disaster Relief</span>
+                    </span>
+                </a>
 
-    <div class="flex-1 pt-20">
-        @RenderBody()
+                <nav class="nav-links" aria-label="Primary">
+                    <a class="nav-link @(currentPath == "/" ? "is-active" : "")" asp-page="/Index">Home</a>
+                    <a class="nav-link @(currentPath == "/about" ? "is-active" : "")" asp-page="/About">About</a>
+                    <a class="nav-link @(currentPath == "/donation/index" ? "is-active" : "")" asp-page="/Donation/Index">Donate</a>
+                    <a class="nav-link @(currentPath == "/volunteer/register" ? "is-active" : "")" asp-page="/Volunteer/Register">Volunteer</a>
+                    <a class="nav-link @(currentPath == "/ourwork" ? "is-active" : "")" asp-page="/OurWork">Our Work</a>
+                    <a class="nav-link @(currentPath == "/contact" ? "is-active" : "")" asp-page="/Contact">Contact</a>
+                    @if (User.IsInRole("Employee"))
+                    {
+                        <a class="nav-link @(currentPath == "/employee/dashboard" ? "is-active" : "")" asp-page="/Employee/Dashboard">Employee</a>
+                    }
+                </nav>
+
+                <div class="topbar__actions">
+                    @if (User.Identity?.IsAuthenticated == true)
+                    {
+                        <a class="ui-button ui-button--secondary" asp-page="/Account/Logout">Logout</a>
+                        <a class="ui-button ui-button--primary" asp-page="/Employee/Dashboard">Dashboard</a>
+                    }
+                    else
+                    {
+                        <a class="ui-button ui-button--secondary" asp-page="/Account/Login">Login</a>
+                        <a class="ui-button ui-button--primary" asp-page="/Account/Register">Register</a>
+                    }
+                </div>
+            </div>
+        </header>
+
+        <main class="site-main">
+            <div class="content-wrap">
+                @if (TempData["Success"] is string successMessage)
+                {
+                    <div class="status-banner status-banner--success">
+                        <p class="status-banner__title">Success</p>
+                        <p class="status-banner__text">@successMessage</p>
+                    </div>
+                }
+
+                @if (TempData["Error"] is string errorMessage)
+                {
+                    <div class="status-banner status-banner--error">
+                        <p class="status-banner__title">Something needs attention</p>
+                        <p class="status-banner__text">@errorMessage</p>
+                    </div>
+                }
+
+                @RenderBody()
+            </div>
+        </main>
+
+        <footer class="footer">
+            <div class="footer__inner">
+                <div class="footer__grid">
+                    <div class="footer__brand">
+                        <a class="brand" asp-page="/Index" aria-label="Gift of the Givers home">
+                            <svg class="brand__logo" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                <circle cx="50" cy="50" r="48" fill="#043f2e" />
+                                <circle cx="50" cy="50" r="39" stroke="#c8f169" stroke-width="7" />
+                                <path d="M50 26V74M26 50H74" stroke="#c8f169" stroke-width="7" stroke-linecap="round" />
+                            </svg>
+                            <span class="brand__title">
+                                <span class="brand__name" style="color:#fff;">Gift of the Givers</span>
+                                <span class="brand__tag">Disaster Relief</span>
+                            </span>
+                        </a>
+
+                        <p>
+                            This portal keeps the original Gift of the Givers look and feel while bringing across the login,
+                            registration, donation, volunteer, and employee features from the earlier app.
+                        </p>
+
+                        <div class="footer__hotline">
+                            <div class="section-icon" style="width:2.2rem;height:2.2rem;background:rgba(200,241,105,0.15);color:var(--accent);">24</div>
+                            <div>
+                                <div class="kicker">24/7 disaster toll-free hotline</div>
+                                <a href="tel:0800786911">0800 786 911 / +27 33 345 0163</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="footer__links">
+                        <div>
+                            <h3>Explore</h3>
+                            <ul>
+                                <li><a asp-page="/Index">Home</a></li>
+                                <li><a asp-page="/About">About</a></li>
+                                <li><a asp-page="/Donation/Index">Donate</a></li>
+                                <li><a asp-page="/Volunteer/Register">Volunteer</a></li>
+                                <li><a asp-page="/OurWork">Our Work</a></li>
+                                <li><a asp-page="/Contact">Contact</a></li>
+                                <li><a asp-page="/Employee/Dashboard">Employee</a></li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h3>Account</h3>
+                            <ul>
+                                <li><a asp-page="/Account/Login">Login</a></li>
+                                <li><a asp-page="/Account/Register">Register</a></li>
+                                <li><a asp-page="/Account/Logout">Logout</a></li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h3>Platform</h3>
+                            <ul>
+                                <li>SQL Client data access</li>
+                                <li>Cookie authentication</li>
+                                <li>Separate Razor Pages</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="footer__bottom">
+                    <div class="footer__status"><span class="footer__status-dot"></span><span>Disaster command center: operations live</span></div>
+                    <div>© @DateTime.Now.Year Gift of the Givers Foundation. All rights reserved.</div>
+                    <div>South Africa · Global Missions</div>
+                </div>
+            </div>
+        </footer>
     </div>
 
-    <partial name="_Footer" />
-
+    <script src="~/js/password-toggle.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
