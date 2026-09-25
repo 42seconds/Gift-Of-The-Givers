@@ -29,7 +29,8 @@ public class Donation
 
     public string? UserId { get; set; }
 
-    [Range(10, 1000000, ErrorMessage = "Please enter a donation amount of at least 10.")]
+    // Compare as decimal: the int overload rounds, which let amounts like 9.99 through.
+    [Range(typeof(decimal), "10", "1000000", ParseLimitsInInvariantCulture = true, ErrorMessage = "Please enter a donation amount of at least 10.")]
     public decimal Amount { get; set; }
 
     public Currency Currency { get; set; } = Currency.ZAR;

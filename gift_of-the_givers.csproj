@@ -24,6 +24,10 @@
     <Content Remove="GiftOfTheGivers.Functions\**" />
     <EmbeddedResource Remove="GiftOfTheGivers.Functions\**" />
     <None Remove="GiftOfTheGivers.Functions\**" />
+    <Compile Remove="GiftOfTheGivers.Tests\**" />
+    <Content Remove="GiftOfTheGivers.Tests\**" />
+    <EmbeddedResource Remove="GiftOfTheGivers.Tests\**" />
+    <None Remove="GiftOfTheGivers.Tests\**" />
   </ItemGroup>
 
 </Project>
