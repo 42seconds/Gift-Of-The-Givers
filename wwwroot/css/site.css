@@ -134,7 +134,7 @@ textarea {
 }
 
 .auth-form {
-  margin-top: 1.25rem;
+  margin: 1.25rem 0;
 }
 
 .topbar {
@@ -1428,7 +1428,7 @@ textarea {
 }
 
 .certificate-actions {
-  margin-top: 1.25rem;
+  margin: 1.25rem 0;
 }
 
 .certificate-preview {
@@ -2100,4 +2100,28 @@ tbody td {
 .status-banner__text {
   margin: 0.35rem 0 0;
   color: var(--muted);
+}
+
+/* Donation impact estimate */
+.impact-estimate {
+  margin: 1.25rem 0;
+  padding: 1rem 1.15rem;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.55);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.impact-estimate__total {
+  margin: 0.4rem 0 0.5rem;
+  color: rgba(21, 31, 0, 0.82);
+}
+
+.impact-estimate__list {
+  margin: 0;
+  padding-left: 1.1rem;
+  color: #151f00;
+}
+
+.impact-estimate__list li + li {
+  margin-top: 0.25rem;
 }

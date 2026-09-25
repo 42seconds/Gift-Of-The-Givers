@@ -1,7 +1,18 @@
 @page
 @model gift_of_the_givers.Pages.Donation.IndexModel
+@using System.Text.Json
+@using gift_of_the_givers.Services
 @{
     ViewData["Title"] = "Donate";
+
+    // Rates and item costs for the live impact estimate, shared with donation-impact.js.
+    var impactConfig = JsonSerializer.Serialize(new
+    {
+        currencies = Enum.GetNames<Currency>(),
+        frequencies = Enum.GetNames<DonationFrequency>(),
+        ratesToZar = DonationImpactCalculator.RatesToZar,
+        items = DonationImpactCalculator.Items
+    }, new JsonSerializerOptions(JsonSerializerDefaults.Web));
 }
 
 <section class="page-section page-section--light">
@@ -74,6 +85,12 @@
                     After submission, the portal generates a placeholder tax certificate that can be viewed on screen or downloaded as PDF.
                 </p>
 
+                <div class="impact-estimate" data-impact-estimate data-impact-config="@impactConfig">
+                    <span class="mini-card__title">Your impact</span>
+                    <p class="impact-estimate__total" data-impact-total>Enter an amount to see what your gift can do.</p>
+                    <ul class="impact-estimate__list" data-impact-list></ul>
+                </div>
+
                 <div class="receipt-box">
                     <div class="receipt-row">
                         <span>Account linked</span>
@@ -107,4 +124,5 @@
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+    <script src="~/js/donation-impact.js" asp-append-version="true"></script>
 }

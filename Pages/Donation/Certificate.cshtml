@@ -81,6 +81,24 @@
                     <a class="ui-button ui-button--secondary" asp-page="/Donation/Index">New donation</a>
                 </div>
 
+                @if (Model.ImpactLines.Count > 0)
+                {
+                    <div class="impact-estimate">
+                        <span class="mini-card__title">Your impact</span>
+                        <p class="impact-estimate__total">
+                            @(Model.Donation!.Frequency == DonationFrequency.Recurring
+                                ? "Over a year, your monthly gift could provide:"
+                                : "Your gift could provide:")
+                        </p>
+                        <ul class="impact-estimate__list">
+                            @foreach (var line in Model.ImpactLines)
+                            {
+                                <li><strong>@line.Quantity</strong> @line.Label</li>
+                            }
+                        </ul>
+                    </div>
+                }
+
                 <div class="mini-preview-row certificate-preview">
                     <div class="mini-card">
                         <div class="mini-card__head">
